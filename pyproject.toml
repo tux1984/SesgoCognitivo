@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sesgocognitivo"
+version = "0.1.0"
+description = "Monitorización y mitigación de sesgo mediático (léxico/discursivo) en medios colombianos: detección, recomendación diversa (DART) y explicabilidad."
+requires-python = ">=3.9"
+readme = "README.md"
+
+[project.optional-dependencies]
+# Bloque 1: recolección + segmentación del corpus.
+# wtpsplit (SaT) y torch son dependencias de primera clase, no opcionales:
+# sat-12l-sm es el segmentador PRIMARIO del proyecto. spaCy solo se instala
+# como fallback documentado (ver src/sesgocognitivo/corpus/segmentation.py).
+corpus = [
+    "requests",
+    "beautifulsoup4",
+    "lxml",
+    "feedparser<6.0.13",   # 6.0.13+ requiere Python>=3.10; este proyecto corre en 3.9
+    "openpyxl>=3.1",
+    "pyyaml",
+    "wtpsplit>=2.2",
+    "torch",
+    "spacy>=3.7,<3.8.8",   # 3.8.8+ solo publica wheels para Python>=3.10 en este momento
+]
+# Bloques 2-5: se completan cuando se construya cada uno.
+deteccion = []
+recomendador = []
+explicaciones = []
+evaluacion = []
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

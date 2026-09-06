@@ -1,0 +1,48 @@
+# Los 5 temas del corpus. `nombre` debe coincidir EXACTO (con tildes) con la lista del
+# dropdown de la columna D ("tema") en la hoja "Corpus - oraciones" del grid de recolección.
+# `keywords` se usan para clasificación por coincidencia de substring (minúsculas) sobre
+# el cuerpo extraído del artículo.
+temas:
+  - id: transicion_gobierno
+    nombre: "Transición de gobierno y relación con la oposición"
+    keywords:
+      - "de la espriella"
+      - "posesión"
+      - "pacto histórico"
+      - "oposición"
+
+  - id: terremoto
+    nombre: "Respuesta a la emergencia del terremoto"
+    keywords:
+      - "terremoto"
+      - "emergencia"
+      - "reconstrucción"
+      - "sismo"
+
+  - id: relacion_eeuu
+    nombre: "Relación con Estados Unidos"
+    keywords:
+      - "estados unidos"
+      - "aranceles"
+      - "trump"
+      - "rubio"
+      - "washington"
+
+  - id: reformas_sociales
+    nombre: "Reformas sociales en disputa (pensional/tributaria)"
+    keywords:
+      - "reforma pensional"
+      - "reforma tributaria"
+      - "corte constitucional"
+
+  - id: seguridad
+    nombre: "Seguridad y orden público"
+    # "seguridad" a secas se quitó de esta lista: se comprobó en la corrida real que
+    # matchea falsos positivos frecuentes en español ("seguridad alimentaria", "seguridad
+    # social", "seguridad vial", "seguridad jurídica") sin relación con el sentido de
+    # orden público/militar del tema. Las 3 frases restantes son específicas y no
+    # presentaron ese problema.
+    keywords:
+      - "cúpula militar"
+      - "estatuto antiterrorista"
+      - "grupos armados"
