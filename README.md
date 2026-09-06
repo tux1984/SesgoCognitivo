@@ -5,12 +5,12 @@ Sebastian Eduardo Fanchi. Tutor: Andrés Darío Moreno Barbosa.
 
 ## El problema
 
-Los medios digitales son hoy el canal informativo dominante en Colombia. Cuando el contenido que
-consume un lector está sesgado —favorece sistemáticamente una postura, un actor o un encuadre— ese
-sesgo interactúa con dos sesgos cognitivos propios del lector: el **sesgo de confirmación** (buscar y
-valorar más la información que ya confirma lo que uno cree) y el **sesgo de anclaje** (dar peso
-desproporcionado al primer dato recibido). El resultado es una exposición cada vez más unidireccional
-que refuerza burbujas de filtro y cámaras de eco, en vez de una deliberación pública informada.
+Los medios digitales son hoy el canal informativo dominante en Colombia. El sesgo mediático —cuando la
+cobertura favorece sistemáticamente una postura, un actor o un encuadre, muchas veces por elección
+léxica del periodista— es lo que este proyecto caracteriza y aborda directamente. La motivación
+original viene de la literatura sobre sesgos cognitivos del lector (confirmación, anclaje): un consumo
+mediático sesgado y unidireccional los refuerza y favorece burbujas de filtro, esa literatura sigue
+siendo el fundamento teórico del proyecto — ver [Nota sobre el pivote de alcance](#nota-sobre-el-pivote-de-alcance).
 
 La literatura internacional sobre detección automática de sesgo mediático mediante procesamiento de
 lenguaje natural (PLN) es amplia, pero está construida casi por completo sobre inglés y medios
