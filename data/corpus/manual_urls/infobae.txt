@@ -1,0 +1,19 @@
+# Pega aquí URLs de Infobae Colombia revisadas manualmente, una por línea.
+# Formato opcional: URL,género   (género = "Noticia dura" | "Opinión-análisis")
+# Si se omite el género, se infiere igual que para RSS (heurística por URL/sección).
+# Líneas que empiecen con # se ignoran.
+# Se usa solo si el descubrimiento automático de RSS/sitemap falla para este medio,
+# o si se invoca explícitamente con --manual-only.
+
+# Auditoría 2026-09-05: se removieron 5 artículos mal clasificados por tema (keyword
+# coincidente sin relación temática real, ver README). Estos reemplazan puntualmente 3
+# de esas 5 celdas para Infobae, verificados con clasificar_tema() antes de agregarlos
+# (margen amplio sobre el segundo tema, no un match de 1 sola keyword como el original):
+https://www.infobae.com/colombia/2026/09/04/arancel-que-impuso-estados-unidos-a-productos-colombianos-podria-ser-eliminado-dentro-de-poco-exportadores-revelaron-posible-fecha/,Noticia dura
+https://www.infobae.com/colombia/2026/08/04/el-director-de-la-dian-atribuyo-a-donald-trump-la-subida-de-aranceles-de-estados-unidos-a-colombia-es-una-decision-unilateral/,Noticia dura
+https://www.infobae.com/colombia/2026/09/03/valle-inicia-reconstruccion-de-12500-viviendas-y-10-colegios-tras-danos-por-terremoto/,Noticia dura
+https://www.infobae.com/colombia/2026/08/26/gustavo-petro-destaco-la-aprobacion-de-su-reforma-pensional-por-parte-de-la-corte-constitucional-un-triunfo-del-pueblo-trabajador/,Noticia dura
+
+# Segunda ronda (2026-09-05): reemplazo de "dolar-hoy-en-colombia" (mismo problema que el
+# artículo del euro -- "Estados Unidos" solo como referencia a política de la Fed/DXY):
+https://www.infobae.com/colombia/2026/07/23/estados-unidos-endurecio-los-aranceles-para-colombia-exportaciones-pagaran-un-gravamen-del-125/,Noticia dura

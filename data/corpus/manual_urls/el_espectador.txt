@@ -1,0 +1,23 @@
+# Pega aquí URLs de El Espectador revisadas manualmente, una por línea.
+# Priorizar la sección Opinión (evitar noticia dura por riesgo de paywall "Premium").
+# Formato opcional: URL,género   (género = "Noticia dura" | "Opinión-análisis")
+# Si se omite el género, se infiere igual que para RSS (heurística por URL/sección).
+# Líneas que empiecen con # se ignoran.
+# Se usa solo si el descubrimiento automático de RSS/sitemap falla para este medio.
+
+# Candidatos encontrados vía búsqueda web (2026-09-05) para cerrar el hueco de
+# El Espectador / Seguridad y orden público / Noticia dura (18/20, faltaban 2):
+https://www.elespectador.com/politica/gobierno-de-la-espriella-prepara-un-estatuto-antiterrorista-que-sera-radicado-ante-el-congreso-esto-se-sabe/,Noticia dura
+https://www.elespectador.com/judicial/presidente-abelardo-de-la-espriella-tiene-nueva-cupula-militar-estos-son-sus-perfiles/,Noticia dura
+https://www.elespectador.com/judicial/nueva-cupula-militar-el-reto-de-recuperar-capacidades-y-frenar-el-control-criminal/,Noticia dura
+https://www.elespectador.com/politica/de-la-espriella-lanzo-advertencia-junto-a-la-cupula-militar-delincuente-que-no-se-someta-sera-dado-de-baja/,Noticia dura
+https://www.elespectador.com/politica/gobierno-construye-estatuto-para-definir-y-reglamentar-a-las-organizaciones-terroristas-noticias-hoy/,Noticia dura
+https://www.elespectador.com/colombia-20/paz-y-memoria/eln-da-la-gobierno-hasta-el-23-de-agosto-para-publicar-decreto-que-la-elimina-de-lista-grupo-armados-organizados/,Noticia dura
+
+# Segunda ronda (2026-09-05): reemplazo de "el-largo-camino-para-encontrar-a-carlos" (tema
+# real = conflicto armado/JEP, quedó mal clasificado en Reformas por una mención incidental
+# de "corte constitucional") y de "cuarenta-anos-del-asesinato..." (tema real = memoria
+# histórica de un magnicidio de 1986, "reconstrucción" se usó en sentido metafórico, no
+# sobre el terremoto). Verificados con clasificar_tema() antes de agregar:
+https://www.elespectador.com/economia/macroeconomia/pensiones-en-colombia-2026-la-historia-del-enredo-entre-la-reforma-la-corte-constitucional-y-los-fondos-privados/,Noticia dura
+https://www.elespectador.com/economia/como-va-la-reconstruccion-en-colombia-tras-el-terremoto-esto-dijo-minvivienda-en-debate-de-control-en-el-senado/,Noticia dura

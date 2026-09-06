@@ -1,0 +1,11 @@
+# Pega aquí URLs de Semana revisadas manualmente, una por línea.
+# Formato opcional: URL,género   (género = "Noticia dura" | "Opinión-análisis")
+# Si se omite el género, se infiere igual que para RSS (heurística por URL/sección).
+# Líneas que empiecen con # se ignoran.
+# Se usa solo si el descubrimiento automático de RSS/sitemap falla para este medio.
+
+# Auditoría 2026-09-05: reemplazo puntual del artículo "Claudia López presume obras..."
+# (removido por mala clasificación de tema -- "reconstrucción" ahí se refería a obras
+# urbanas ordinarias, no al terremoto). Verificado con clasificar_tema() antes de agregar:
+https://www.semana.com/nacion/articulo/colombia-intenta-levantarse-tras-el-terremoto-pero-las-nuevas-cifras-estremecen-al-pais-los-numeros-son-preocupantes/202641/,Noticia dura
+https://www.semana.com/politica/articulo/tras-la-tragedia-del-terremoto-asi-avanzara-el-gobierno-de-abelardo-de-la-espriella-en-la-reconstruccion-de-las-viviendas/202629/,Noticia dura
