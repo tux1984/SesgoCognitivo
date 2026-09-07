@@ -17,3 +17,18 @@ https://www.infobae.com/colombia/2026/08/26/gustavo-petro-destaco-la-aprobacion-
 # Segunda ronda (2026-09-05): reemplazo de "dolar-hoy-en-colombia" (mismo problema que el
 # artículo del euro -- "Estados Unidos" solo como referencia a política de la Fed/DXY):
 https://www.infobae.com/colombia/2026/07/23/estados-unidos-endurecio-los-aranceles-para-colombia-exportaciones-pagaran-un-gravamen-del-125/,Noticia dura
+
+# Tercera ronda (2026-09-06): reemplazo de "vina-machado" (emergencia=médica, homónimo) y
+# "encontraron-muertos-tres-miembros-familia" (emergencia=organismos genéricos de socorro)
+# en Terremoto; y de "defensa-uribe-masacre-aro-granja" y "maria-claudia-tarazona" (corte
+# constitucional=casos judiciales sin relación con pensión/tributaria) en Reformas.
+# Verificados con clasificar_tema() antes de agregar:
+https://www.infobae.com/colombia/2026/09/02/al-ministerio-de-vivienda-no-le-alcanza-la-plata-para-atender-a-los-afectados-por-el-terremoto-700000-millones-no-es-absolutamente-nada/,Noticia dura
+https://www.infobae.com/colombia/2026/09/01/camacol-hizo-balance-de-las-viviendas-afectadas-por-el-terremoto-en-cali-explico-por-que-tantos-edificios-colapsaron-en-esa-ciudad/,Noticia dura
+https://www.infobae.com/colombia/2026/08/26/la-corte-constitucional-aprobo-la-reforma-pensional-de-petro-y-asi-reacciono-el-pais-politico-preocupante/,Noticia dura
+https://www.infobae.com/colombia/2026/09/07/reforma-pensional-confirman-en-que-ano-se-acabara-el-ahorro-de-los-trabajadores-colombianos-y-cuando-colapsara-colpensiones/,Noticia dura
+
+# Cuarta ronda (2026-09-07): reemplazo de "cayeron-cinco-presuntos-narcotraficantes..." (tema
+# real es una operación antinarcóticos, "Estados Unidos" solo como uno de los destinos de la
+# droga -- no es la relación diplomática/comercial que busca este tema). Verificado:
+https://www.infobae.com/colombia/2026/09/04/marco-rubio-confirmo-visita-a-colombia-entre-el-8-y-el-10-de-septiembre-se-reunira-con-abelardo-de-la-espriella-para-hablar-de-aranceles-y-cooperacion-antidrogas/,Noticia dura

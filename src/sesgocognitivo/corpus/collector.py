@@ -50,10 +50,9 @@ def procesar_articulo(
     segmentar,
     tracker: GridState,
     fecha: str | None = None,
-    articulo_id: str | None = None,
 ) -> list[FilaOracion]:
-    aid_temprano = articulo_id or url
-    if tracker.articulo_ya_procesado(medio.nombre, aid_temprano):
+    aid = tracker.obtener_o_asignar_articulo_id(url)
+    if tracker.articulo_ya_procesado(medio.nombre, aid):
         # Mismo articulo_id ya recolectado en una corrida anterior (u otro feed de esta
         # misma corrida) bajo cualquier tema/género -- evita, por ejemplo, que un artículo
         # cross-listado en dos categorías del mismo CMS (ej. "opinion" y "judicial" en El
@@ -105,7 +104,6 @@ def procesar_articulo(
     if not oraciones:
         return []
 
-    aid = articulo_id or url
     filas: list[FilaOracion] = []
     for i, oracion in enumerate(oraciones):
         filas.append(
@@ -168,7 +166,6 @@ def recolectar_de_feed(
                 segmentar,
                 tracker,
                 fecha=entry.get("published", ""),
-                articulo_id=entry.get("id", link),
             )
             if filas:
                 filas_totales.extend(filas)

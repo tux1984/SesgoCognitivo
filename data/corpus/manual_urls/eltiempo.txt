@@ -19,3 +19,8 @@ https://www.eltiempo.com/opinion/columnistas/una-batalla-sin-partidos-3556318,Op
 # antes de agregar (19 vs 1 keywords sobre el segundo tema):
 https://www.eltiempo.com/mundo/eeuu-y-canada/estados-unidos-anuncia-un-nuevo-regimen-de-aranceles-para-colombia-y-fija-el-gravamen-en-12-5-que-cambia-para-los-exportadores-3573311,Noticia dura
 https://www.eltiempo.com/mundo/eeuu-y-canada/hasta-donde-llegara-de-la-espriella-en-su-alineamiento-con-trump-las-claves-y-riesgos-del-giro-exterior-de-colombia-3576907,Noticia dura
+
+# Tercera ronda (2026-09-06): reemplazo de "lindsay-clancy" (juicio de EE. UU. sin ninguna
+# relación con Colombia; "emergencia" era una apelación legal, no el terremoto) en Terremoto.
+# Verificado con clasificar_tema() antes de agregar:
+https://www.eltiempo.com/colombia/cali/abelardo-de-la-espriella-anuncio-medidas-para-acelerar-la-reconstruccion-de-cali-tras-el-terremoto-con-acciones-en-vivienda-empleo-y-economia-3583937,Noticia dura

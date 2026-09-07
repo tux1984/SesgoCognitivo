@@ -21,3 +21,17 @@ https://www.elespectador.com/colombia-20/paz-y-memoria/eln-da-la-gobierno-hasta-
 # sobre el terremoto). Verificados con clasificar_tema() antes de agregar:
 https://www.elespectador.com/economia/macroeconomia/pensiones-en-colombia-2026-la-historia-del-enredo-entre-la-reforma-la-corte-constitucional-y-los-fondos-privados/,Noticia dura
 https://www.elespectador.com/economia/como-va-la-reconstruccion-en-colombia-tras-el-terremoto-esto-dijo-minvivienda-en-debate-de-control-en-el-senado/,Noticia dura
+
+# Tercera ronda (2026-09-06): reemplazo de "gobierno-colombiano-rusia-ucrania-reclutamiento"
+# (mención presidencial incidental, tema real ajeno a Transición) y de "editorial-neutralidad
+# -religiosa" (corte constitucional citada en un tema de Iglesia-Estado, no de reforma).
+# Verificados con clasificar_tema() antes de agregar:
+https://www.elespectador.com/politica/ivan-cepeda-liderara-pacto-historico-en-construccion-de-su-gabinete-paralelo-al-gobierno-de-la-espriella-noticias-hoy/,Noticia dura
+https://www.elespectador.com/opinion/editorial/editorial-la-reforma-pensional-se-debe-reglamentar-ya/,Opinión-análisis
+https://www.elespectador.com/opinion/columnistas/columnista-invitada/conversaciones-pendientes-sobre-la-reforma-pensional-2/,Opinión-análisis
+
+# Cuarta ronda (2026-09-07): reemplazo de "editorial-el-estado-colombiano-no-puede-ser-cruel"
+# (mismo patrón que "la muerte como trofeo": crítica de política de seguridad -- exhibición de
+# cadáveres de combatientes -- mal ubicada en Transición). Verificado leyendo el contexto real,
+# no solo el conteo (que era bajo pero genuino):
+https://www.elespectador.com/opinion/columnistas/cecilia-orozco-tascon/el-pacto-de-los-poderosos-de-barranquilla-con-de-la-espriella/,Opinión-análisis

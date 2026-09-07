@@ -9,3 +9,12 @@
 # urbanas ordinarias, no al terremoto). Verificado con clasificar_tema() antes de agregar:
 https://www.semana.com/nacion/articulo/colombia-intenta-levantarse-tras-el-terremoto-pero-las-nuevas-cifras-estremecen-al-pais-los-numeros-son-preocupantes/202641/,Noticia dura
 https://www.semana.com/politica/articulo/tras-la-tragedia-del-terremoto-asi-avanzara-el-gobierno-de-abelardo-de-la-espriella-en-la-reconstruccion-de-las-viviendas/202629/,Noticia dura
+
+# Tercera ronda (2026-09-06): reemplazo de "y-las-otras-victimas" (memoria histórica de la UP,
+# no reforma), "reino-unido-malvinas-milei" (ajeno a la relación Colombia-EEUU pese a citar a
+# Trump) y "la-muerte-como-trofeo" (crítica de seguridad, no de transición de gobierno).
+# Verificados con clasificar_tema() antes de agregar:
+https://www.semana.com/opinion/articulo/el-impacto-financiero-y-fiscal-de-la-reforma-pensional/202456/,Opinión-análisis
+https://www.semana.com/opinion/articulo/reforma-pensional-su-control-empieza/202600/,Opinión-análisis
+https://www.semana.com/mundo/articulo/nueva-demanda-contra-aranceles-de-donald-trump-medidas-contra-colombia-podrian-caerse/202610/,Noticia dura
+https://www.semana.com/opinion/articulo/ni-el-pacto-ni-petro-ni-cepeda-pueden-liderar-la-oposicion/202647/,Opinión-análisis

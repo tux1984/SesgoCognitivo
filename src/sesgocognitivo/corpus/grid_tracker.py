@@ -10,10 +10,16 @@ from __future__ import annotations
 
 import dataclasses
 import logging
+import re
+
+from openpyxl.utils import column_index_from_string
 
 from sesgocognitivo.corpus.classification import GENERO_DURA, GENERO_OPINION
+from sesgocognitivo.corpus.excel_writer import COLUMNA_URL
 
 logger = logging.getLogger("sesgocognitivo")
+
+_PATRON_ART_ID = re.compile(r"^ART_(\d+)$")
 
 HOJA_GRID = "Grid de recoleccion"
 HOJA_CORPUS = "Corpus - oraciones"
@@ -51,6 +57,10 @@ class GridState:
     # distintas. Este set global por medio evita reprocesar el mismo artículo dos veces
     # sin importar bajo qué género/tema haya entrado la primera vez.
     _articulos_procesados_por_medio: dict[str, set] = dataclasses.field(default_factory=dict)
+    # IDs cortos (ART_001, ART_002...) en vez de la URL completa como articulo_id/oracion_id
+    # -- la URL real ya vive aparte en la columna url_fuente, así que el id no necesita serla.
+    _id_por_url: dict[str, str] = dataclasses.field(default_factory=dict)
+    _siguiente_numero: int = 1
 
     @classmethod
     def desde_workbook(cls, wb) -> "GridState":
@@ -67,6 +77,8 @@ class GridState:
 
         estado = cls(objetivos=objetivos)
 
+        col_url = column_index_from_string(COLUMNA_URL)
+        max_numero_visto = 0
         ws_corpus = wb[HOJA_CORPUS]
         for fila in range(CORPUS_FILA_INICIO, CORPUS_FILA_FIN + 1):
             articulo_id = ws_corpus.cell(row=fila, column=1).value
@@ -74,10 +86,17 @@ class GridState:
             medio = ws_corpus.cell(row=fila, column=3).value
             tema = ws_corpus.cell(row=fila, column=4).value
             genero = ws_corpus.cell(row=fila, column=5).value
+            url = ws_corpus.cell(row=fila, column=col_url).value
             if not (medio and tema and genero and oracion_id):
                 continue
             estado._registrar_visto(medio, tema, genero, oracion_id, articulo_id)
+            if url and articulo_id:
+                estado._id_por_url.setdefault(url, articulo_id)
+            match = _PATRON_ART_ID.match(articulo_id or "")
+            if match:
+                max_numero_visto = max(max_numero_visto, int(match.group(1)))
 
+        estado._siguiente_numero = max_numero_visto + 1
         return estado
 
     def _registrar_visto(self, medio: str, tema: str, genero: str, oracion_id: str, articulo_id: str | None) -> None:
@@ -86,6 +105,18 @@ class GridState:
         if articulo_id:
             self._articulos_vistos.setdefault(clave, set()).add(articulo_id)
             self._articulos_procesados_por_medio.setdefault(medio, set()).add(articulo_id)
+
+    def obtener_o_asignar_articulo_id(self, url: str) -> str:
+        """Id corto y estable para `url` (ART_001, ART_002...), reutilizando el ya asignado
+        si esta misma URL ya está en la hoja (de esta corrida o de una anterior), o asignando
+        el siguiente número libre si es nueva. Determinista dentro de una corrida: la misma
+        URL siempre recibe el mismo id, sin importar cuántas veces se consulte."""
+        if url in self._id_por_url:
+            return self._id_por_url[url]
+        nuevo_id = f"ART_{self._siguiente_numero:03d}"
+        self._siguiente_numero += 1
+        self._id_por_url[url] = nuevo_id
+        return nuevo_id
 
     def articulo_ya_procesado(self, medio: str, articulo_id: str) -> bool:
         return articulo_id in self._articulos_procesados_por_medio.get(medio, set())

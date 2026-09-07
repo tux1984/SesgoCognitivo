@@ -59,3 +59,37 @@ def test_articulo_ya_procesado_es_independiente_de_tema_y_genero(fixture_wb_path
     assert tracker.articulo_ya_procesado(medio, "ART_X")
     # Un medio distinto con el mismo articulo_id no debe verse afectado.
     assert not tracker.articulo_ya_procesado("El Tiempo", "ART_X")
+
+
+def test_asigna_ids_cortos_secuenciales_por_url(fixture_wb_path):
+    """Regresión de usabilidad 2026-09-07: articulo_id/oracion_id eran la URL completa,
+    impracticable de referenciar. Ahora se asignan ids cortos (ART_001, ART_002...) -- la
+    URL real sigue viviendo aparte en la columna url_fuente, así que no se pierde nada."""
+    wb = openpyxl.load_workbook(fixture_wb_path)
+    tracker = GridState.desde_workbook(wb)
+
+    id1 = tracker.obtener_o_asignar_articulo_id("https://example.test/nota-a")
+    id2 = tracker.obtener_o_asignar_articulo_id("https://example.test/nota-b")
+    assert id1 == "ART_001"
+    assert id2 == "ART_002"
+    # La misma URL consultada de nuevo devuelve el mismo id, no uno nuevo.
+    assert tracker.obtener_o_asignar_articulo_id("https://example.test/nota-a") == id1
+
+
+def test_numeracion_continua_desde_ids_ya_presentes_en_la_hoja(fixture_wb_path):
+    """Si la hoja ya trae ART_005 de una corrida anterior, la siguiente URL nueva debe
+    recibir ART_006, no reiniciar ni colisionar."""
+    from sesgocognitivo.corpus.excel_writer import COLUMNA_URL
+
+    wb = openpyxl.load_workbook(fixture_wb_path)
+    ws = wb["Corpus - oraciones"]
+    ws["A8"] = "ART_005"
+    ws["B8"] = "ART_005_S01"
+    ws["C8"] = "Semana"
+    ws["D8"] = "Seguridad y orden público"
+    ws["E8"] = "Noticia dura"
+    ws[f"{COLUMNA_URL}8"] = "https://example.test/ya-existente"
+
+    tracker = GridState.desde_workbook(wb)
+    assert tracker.obtener_o_asignar_articulo_id("https://example.test/ya-existente") == "ART_005"
+    assert tracker.obtener_o_asignar_articulo_id("https://example.test/nota-nueva") == "ART_006"

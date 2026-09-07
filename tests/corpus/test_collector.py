@@ -48,12 +48,11 @@ def test_procesar_articulo_no_reprocesa_articulo_ya_visto(monkeypatch):
     )
 
     tracker = _tracker_vacio()
-    tracker.registrar("Infobae Colombia", "Seguridad y orden público", GENERO_DURA, ["ART_Y_S01"], "ART_Y")
+    url = "https://example.test/ART_Y"
+    aid = tracker.obtener_o_asignar_articulo_id(url)
+    tracker.registrar("Infobae Colombia", "Seguridad y orden público", GENERO_DURA, [f"{aid}_S01"], aid)
 
-    filas = procesar_articulo(
-        "https://example.test/ART_Y", _medio_falso(), GENERO_OPINION, [], lambda t: [t], tracker,
-        articulo_id="ART_Y",
-    )
+    filas = procesar_articulo(url, _medio_falso(), GENERO_OPINION, [], lambda t: [t], tracker)
     assert filas == []
     assert llamadas == []  # ni siquiera se llegó a extraer el cuerpo
 
