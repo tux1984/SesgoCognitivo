@@ -1,5 +1,5 @@
 # Medios para el dominio "Salud" del corpus v2 -- ángulo: crisis de las EPS / reforma a
-# la salud (ver temas_v2.yaml). Los feeds de sección "salud" existen y validan, pero
+# la salud (ver temas.yaml). Los feeds de sección "salud" existen y validan, pero
 # muchas de las historias específicas de la crisis EPS son de meses atrás (no salen en
 # los últimos ítems del RSS) -- se complementan fuerte con curación manual verificada.
 medios:

@@ -1,6 +1,6 @@
 # Medios para el dominio "Medio ambiente" del corpus v2 -- ángulo: choque de gobiernos
 # Petro -> De la Espriella sobre fracking y minería en el páramo de Santurbán (ver
-# temas_v2.yaml). Se recolecta 100% vía curación manual verificada (mismo patrón que
+# temas.yaml). Se recolecta 100% vía curación manual verificada (mismo patrón que
 # Economía y Salud): los feeds de sección ambiental existen pero las historias específicas
 # de este choque puntual no siempre están entre los últimos ítems del RSS.
 medios:
