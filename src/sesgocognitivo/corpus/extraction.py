@@ -52,6 +52,17 @@ _PATRONES_RUIDO = [
     # Hallazgos de la auditoría 2026-09-05 sobre el corpus real de 500 oraciones:
     re.compile(r"^fuente:\s*.+$", re.IGNORECASE),  # "Fuente: Dow Jones." -- leyenda de gráfico, no oración
     re.compile(r"espacio de debate que no compromete la opini[oó]n", re.IGNORECASE),  # disclaimer fijo de La Silla Vacía en TODAS sus columnas de opinión
+    # Hallazgo 2026-09-09 (corpus v2, dominio Economía): intro fija de la sección "Detector
+    # de Mentiras" de La Silla Vacía -- aparece como las 2 primeras oraciones de CADA
+    # artículo de esa sección, no es contenido real del fact-check.
+    re.compile(r"^escr[íi]banos al detectbot", re.IGNORECASE),
+    re.compile(r"^nuestro equipo de periodistas la verificar[áa] para usted", re.IGNORECASE),
+    # Hallazgos de la auditoría 2026-09-09 sobre el corpus v2 (multi-dominio, 500 oraciones):
+    re.compile(r"^todo lo que necesita saber sobre el poder", re.IGNORECASE),  # intro fija de la sección "Silla Amazonía" de La Silla Vacía
+    re.compile(r"^(lea|lea tambi[ée]n|en contexto):\s", re.IGNORECASE),  # teaser de enlace interno, no es oración del cuerpo
+    re.compile(r"^ahora puede seguirnos en facebook", re.IGNORECASE),  # boilerplate de redes sociales (Infobae)
+    re.compile(r"^en vivo\s*\|", re.IGNORECASE),  # etiqueta de widget de marcador en vivo insertada en medio del cuerpo
+    re.compile(r"^contexto:\(", re.IGNORECASE),  # variante de teaser de enlace interno (El Tiempo)
 ]
 
 

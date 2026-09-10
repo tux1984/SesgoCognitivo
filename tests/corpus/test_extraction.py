@@ -102,7 +102,22 @@ def test_filtro_de_ruido_descarta_byline_y_publicidad():
     assert es_texto_ruido(
         "Este es un espacio de debate que no compromete la opinión de La Silla Vacía ni de sus aliados."
     )
+    # Regresión 2026-09-09 (corpus v2, Economía): intro fija de "Detector de Mentiras".
+    assert es_texto_ruido("Escríbanos al DetectBot 🤖 cuando vea información que no sepa si es cierta.")
+    assert es_texto_ruido("Nuestro equipo de periodistas la verificará para usted.")
     assert es_texto_ruido("Utilizamos cookies propias y de terceros.")
+    # Regresión de auditoría 2026-09-09 (corpus v2, 500 oraciones multi-dominio): estos 5
+    # patrones colaron filas completas de boilerplate/navegación como si fueran oraciones
+    # reales del cuerpo -- encontrados leyendo las 497 oraciones una por una.
+    assert es_texto_ruido(
+        "Todo lo que necesita saber sobre el poder, la deforestación y la biodiversidad "
+        "en la región amazónica está en la Silla Amazonía ."
+    )
+    assert es_texto_ruido("Lea también: Comisiones económicas no debatieron el presupuesto")
+    assert es_texto_ruido("En contexto: Tres soldados mueren en combate tras ataque del Eln")
+    assert es_texto_ruido("Ahora puede seguirnos en Facebook y en nuestro WhatsApp Channel")
+    assert es_texto_ruido("EN VIVO | Colombia vs. Jordania: siga el amistoso de preparación")
+    assert es_texto_ruido("Contexto:(Posesión de Abelardo De La Espriella cómo nuevo presidente)")
     assert not es_texto_ruido("Este es un párrafo real de contenido periodístico genuino.")
 
 
