@@ -17,8 +17,8 @@ def _medio_falso():
 
 def _tracker_vacio():
     return GridState(objetivos={
-        ("Infobae Colombia", "Seguridad y orden público"): ObjetivoCelda(
-            "Infobae Colombia", "Seguridad y orden público", 14, 6
+        ("Infobae Colombia", "Deportes"): ObjetivoCelda(
+            "Infobae Colombia", "Deportes", 14, 6
         )
     })
 
@@ -50,7 +50,7 @@ def test_procesar_articulo_no_reprocesa_articulo_ya_visto(monkeypatch):
     tracker = _tracker_vacio()
     url = "https://example.test/ART_Y"
     aid = tracker.obtener_o_asignar_articulo_id(url)
-    tracker.registrar("Infobae Colombia", "Seguridad y orden público", GENERO_DURA, [f"{aid}_S01"], aid)
+    tracker.registrar("Infobae Colombia", "Deportes", GENERO_DURA, [f"{aid}_S01"], aid)
 
     filas = procesar_articulo(url, _medio_falso(), GENERO_OPINION, [], lambda t: [t], tracker)
     assert filas == []
@@ -64,7 +64,7 @@ def test_procesar_articulo_completa_fecha_con_jsonld_si_no_llega_del_llamador(mo
     import sesgocognitivo.corpus.collector as collector_mod
     from sesgocognitivo.corpus.config_loader import load_temas
 
-    texto_largo = "El Gobierno anunció un nuevo estatuto antiterrorista contra grupos armados. " * 15
+    texto_largo = "La selección Colombia de Néstor Lorenzo definió la convocatoria del mundial 2026. " * 15
     monkeypatch.setattr(collector_mod, "extraer_cuerpo", lambda url, timeout=15: texto_largo)
     monkeypatch.setattr(collector_mod, "extraer_fecha_publicacion", lambda url, timeout=15: "2026-08-01T00:00:00-05:00")
 
@@ -82,7 +82,7 @@ def test_procesar_articulo_no_pisa_fecha_ya_provista_por_el_feed(monkeypatch):
     import sesgocognitivo.corpus.collector as collector_mod
     from sesgocognitivo.corpus.config_loader import load_temas
 
-    texto_largo = "El Gobierno anunció un nuevo estatuto antiterrorista contra grupos armados. " * 15
+    texto_largo = "La selección Colombia de Néstor Lorenzo definió la convocatoria del mundial 2026. " * 15
     monkeypatch.setattr(collector_mod, "extraer_cuerpo", lambda url, timeout=15: texto_largo)
 
     def _no_deberia_llamarse(url, timeout=15):
@@ -109,15 +109,15 @@ def test_procesar_articulo_filtra_boilerplate_entre_oraciones_reales(monkeypatch
 
     oraciones_falsas = [
         "Este es un espacio de debate que no compromete la opinión de La Silla Vacía ni de sus aliados.",
-        "El Gobierno anunció un nuevo estatuto antiterrorista contra los grupos armados del país.",
-        "La medida busca frenar el avance de estructuras criminales en varias regiones.",
+        "Néstor Lorenzo defendió la convocatoria de la selección Colombia al mundial 2026.",
+        "La decisión generó reacciones encontradas entre la prensa deportiva.",
     ]
     # clasificar_tema opera sobre el texto CRUDO extraído, no sobre `oraciones_falsas` --
     # debe contener las keywords del tema para que procesar_articulo llegue al filtro que
     # este test quiere probar (si no, "tema is None" corta la función antes de segmentar).
     monkeypatch.setattr(
         collector_mod, "extraer_cuerpo",
-        lambda url, timeout=15: "estatuto antiterrorista grupos armados. " * 20,
+        lambda url, timeout=15: "selección Colombia Néstor Lorenzo dimayor mundial 2026. " * 20,
     )
 
     def segmentar_falso(_texto):
@@ -129,7 +129,7 @@ def test_procesar_articulo_filtra_boilerplate_entre_oraciones_reales(monkeypatch
     )
     textos = [f.oracion_texto for f in filas]
     assert not any("espacio de debate" in t for t in textos)
-    assert any("estatuto antiterrorista" in t for t in textos)
+    assert any("Néstor Lorenzo" in t for t in textos)
     # El disclaimer filtrado no debe quedar colgado como "oracion_anterior" de la primera fila real
     assert filas[0].oracion_anterior == ""
 
@@ -151,7 +151,7 @@ def test_procesar_articulo_descarta_oracion_repetida_consecutiva(monkeypatch):
     ]
     monkeypatch.setattr(
         collector_mod, "extraer_cuerpo",
-        lambda url, timeout=15: "estatuto antiterrorista grupos armados. " * 20,
+        lambda url, timeout=15: "selección Colombia Néstor Lorenzo dimayor mundial 2026. " * 20,
     )
 
     filas = procesar_articulo(
@@ -166,7 +166,7 @@ def test_procesar_articulo_acepta_cuerpo_normal(monkeypatch):
     import sesgocognitivo.corpus.collector as collector_mod
 
     texto_largo = (
-        "El Gobierno anunció un nuevo estatuto antiterrorista contra grupos armados. " * 15
+        "La selección Colombia de Néstor Lorenzo definió la convocatoria del mundial 2026. " * 15
     )
     assert len(texto_largo) >= MIN_CUERPO_ARTICULO
     monkeypatch.setattr(collector_mod, "extraer_cuerpo", lambda url, timeout=15: texto_largo)
@@ -176,4 +176,4 @@ def test_procesar_articulo_acepta_cuerpo_normal(monkeypatch):
         lambda t: [t], _tracker_vacio(),
     )
     assert len(filas) == 1
-    assert filas[0].tema == "Seguridad y orden público"
+    assert filas[0].tema == "Deportes"

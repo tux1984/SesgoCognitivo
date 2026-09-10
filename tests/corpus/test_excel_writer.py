@@ -22,7 +22,7 @@ def _fila(**overrides):
         articulo_id="A1",
         oracion_id="A1_S01",
         medio="Infobae Colombia",
-        tema="Transición de gobierno y relación con la oposición",
+        tema="Política",
         genero="Noticia dura",
         fecha_publicacion="2026-09-01",
         oracion_texto="Texto de prueba.",
@@ -34,41 +34,47 @@ def _fila(**overrides):
     return FilaFalsa(**base)
 
 
-def test_primera_fila_vacia_es_8_no_7(fixture_wb_path):
+def test_primera_fila_vacia_es_la_5(fixture_wb_path):
     wb = openpyxl.load_workbook(fixture_wb_path)
     ws = wb["Corpus - oraciones"]
-    assert encontrar_primera_fila_vacia(ws) == FILA_INICIO_DATOS == 8
+    assert encontrar_primera_fila_vacia(ws) == FILA_INICIO_DATOS == 5
 
 
 def test_leer_valores_permitidos_lee_dropdown_real(fixture_wb_path):
     wb = openpyxl.load_workbook(fixture_wb_path)
     ws = wb["Corpus - oraciones"]
     assert "Infobae Colombia" in leer_valores_permitidos(ws, "C")
-    assert "Transición de gobierno y relación con la oposición" in leer_valores_permitidos(ws, "D")
+    assert "Política" in leer_valores_permitidos(ws, "D")
     assert set(leer_valores_permitidos(ws, "E")) == {"Noticia dura", "Opinión-análisis"}
 
 
-def test_escribir_filas_empieza_en_8_y_no_toca_ejemplo(fixture_wb_path):
+def test_escribir_filas_empieza_en_la_primera_fila_de_datos(fixture_wb_path):
     wb = openpyxl.load_workbook(fixture_wb_path)
     ws = wb["Corpus - oraciones"]
 
-    valores_antes = [[ws.cell(row=r, column=c).value for c in range(1, 33)] for r in (5, 6, 7)]
+    aux_antes = [ws.cell(row=r, column=30).value for r in range(5, 8)]
 
     escritas = escribir_filas(wb, [_fila()])
     assert escritas == 1
-    assert ws["B8"].value == "A1_S01"
-    assert ws["C8"].value == "Infobae Colombia"
-    assert ws[f"{COLUMNA_URL}8"].value == "https://example.com/nota"
+    assert ws["B5"].value == "A1_S01"
+    assert ws["C5"].value == "Infobae Colombia"
+    assert ws[f"{COLUMNA_URL}5"].value == "https://example.com/nota"
 
-    valores_despues = [[ws.cell(row=r, column=c).value for c in range(1, 33)] for r in (5, 6, 7)]
-    assert valores_antes == valores_despues
+    # la columna aux es del archivo, no del pipeline: no se toca al escribir
+    aux_despues = [ws.cell(row=r, column=30).value for r in range(5, 8)]
+    assert aux_antes == aux_despues
+
+    # una segunda corrida arranca en la fila siguiente, sin pisar la anterior
+    escribir_filas(wb, [_fila(oracion_id="A1_S02")])
+    assert ws["B5"].value == "A1_S01"
+    assert ws["B6"].value == "A1_S02"
 
 
 def test_escribir_filas_nunca_toca_columna_aux(fixture_wb_path):
     wb = openpyxl.load_workbook(fixture_wb_path)
     escribir_filas(wb, [_fila()])
     ws = wb["Corpus - oraciones"]
-    valor = ws[f"{COLUMNA_AUX}8"].value
+    valor = ws[f"{COLUMNA_AUX}5"].value
     assert isinstance(valor, str) and valor.startswith("=")
 
 
@@ -95,7 +101,7 @@ def test_escribir_filas_es_idempotente_en_columna_url_setup(fixture_wb_path):
     escribir_filas(wb, [_fila(oracion_id="A1_S02")])
     ws = wb["Corpus - oraciones"]
     assert ws[f"{COLUMNA_URL}4"].value == "url_fuente"
-    assert ws["B9"].value == "A1_S02"
+    assert ws["B6"].value == "A1_S02"
 
 
 def test_escribir_filas_no_duplica_oracion_id_entre_corridas_separadas(fixture_wb_path):
@@ -116,7 +122,7 @@ def test_escribir_filas_no_duplica_oracion_id_entre_corridas_separadas(fixture_w
     assert escritas == 1  # solo la fila nueva; la duplicada se descarta
 
     ws2 = wb2["Corpus - oraciones"]
-    oracion_ids = [ws2.cell(row=r, column=2).value for r in range(8, 12)]
+    oracion_ids = [ws2.cell(row=r, column=2).value for r in range(5, 9)]
     assert oracion_ids.count("DUP_S01") == 1
     assert "NUEVA_S01" in oracion_ids
 
@@ -135,5 +141,5 @@ def test_guardar_workbook_seguro_ok(fixture_wb_path):
     guardar_workbook_seguro(wb, fixture_wb_path)
 
     releido = openpyxl.load_workbook(fixture_wb_path)
-    assert releido["Corpus - oraciones"]["B8"].value == "A1_S01"
+    assert releido["Corpus - oraciones"]["B5"].value == "A1_S01"
     assert not fixture_wb_path.with_suffix(".tmp.xlsx").exists()

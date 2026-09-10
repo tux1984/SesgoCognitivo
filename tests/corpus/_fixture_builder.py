@@ -1,7 +1,7 @@
-"""Construye un workbook sintético que replica la ESTRUCTURA relevante del grid real
-(hojas, fila de header en 4, filas 5-7 de ejemplo, datos desde fila 8, dropdowns de
-medio/tema/género y del esquema completo de anotación de 9 categorías) sin usar el
-archivo real como fuente. Los tests SIEMPRE corren contra esto.
+"""Construye un workbook sintético que replica la ESTRUCTURA relevante del corpus real
+(hojas, fila de header en 4, datos desde fila 5, dropdowns de medio/tema/género y del
+esquema completo de anotación de 9 categorías) sin usar el archivo real como fuente.
+Los tests SIEMPRE corren contra esto.
 """
 from __future__ import annotations
 
@@ -9,13 +9,7 @@ import openpyxl
 from openpyxl.worksheet.datavalidation import DataValidation
 
 MEDIOS = ["Infobae Colombia", "El Tiempo", "El Espectador", "La Silla Vacía", "Semana"]
-TEMAS = [
-    "Transición de gobierno y relación con la oposición",
-    "Respuesta a la emergencia del terremoto",
-    "Relación con Estados Unidos",
-    "Reformas sociales en disputa (pensional/tributaria)",
-    "Seguridad y orden público",
-]
+TEMAS = ["Política", "Economía y negocios", "Salud", "Medio ambiente", "Deportes"]
 GENEROS = ["Noticia dura", "Opinión-análisis"]
 
 # Las 9 categorías del esquema completo (J1 léxico + J2 discursivo), cada una con su
@@ -58,35 +52,23 @@ def build_fixture_workbook() -> openpyxl.Workbook:
         headers.append(categoria)
         headers.append(f"{categoria}_span")
     headers += [
-        "direccion", "actor_objetivo", "intensidad_lexica", "camuflaje_epistemico",
+        "direccion", "actor_objetivo",
         "aux: primera\nfila de la\noración (no editar)",
     ]
     for i, h in enumerate(headers, start=1):
         ws.cell(row=4, column=i, value=h)
-    assert len(headers) == 32  # A..AF (COLUMNA_AUX); AG (url_fuente) lo agrega escribir_filas
-    ws.merge_cells("A1:AF1")
-    ws.merge_cells("A2:AF2")
-    ws["A1"] = "Grid de recolección — 500 oraciones"
+    assert len(headers) == 30  # A..AD (COLUMNA_AUX); AE (url_fuente) lo agrega escribir_filas
+    ws.merge_cells("A1:AD1")
+    ws.merge_cells("A2:AD2")
+    ws["A1"] = "Corpus multi-dominio — 500 oraciones"
     ws["A2"] = "Celdas amarillas = editables."
 
     # Filas de ejemplo protegidas (5-7), imitando el archivo real.
-    ws["A5"], ws["B5"] = "ART_0231", "ART_0231_S07"
-    ws["C5"], ws["D5"], ws["E5"] = "El Tiempo", TEMAS[0], "Noticia dura"
-    ws["G5"] = "Oración de ejemplo con hallazgo léxico y discursivo."
-    ws["AF5"] = "=IF(COUNTIF($B$5:B5,B5)=1,1,0)"
-
-    ws["A6"], ws["B6"] = "ART_0198", "ART_0198_S02"
-    ws["C6"], ws["D6"], ws["E6"] = "El Espectador", TEMAS[3], "Opinión-análisis"
-    ws["G6"] = "Oración de ejemplo con hallazgo solo discursivo."
-    ws["AF6"] = "=IF(COUNTIF($B$5:B6,B6)=1,1,0)"
-
-    ws["A7"], ws["B7"] = "ART_0245", "ART_0245_S03"
-    ws["C7"], ws["D7"], ws["E7"] = "El Tiempo", TEMAS[0], "Noticia dura"
-    ws["G7"] = "Oración de ejemplo neutral."
-    ws["AF7"] = "=IF(COUNTIF($B$5:B7,B7)=1,1,0)"
-
-    for fila in range(8, 20 + 1):
-        ws.cell(row=fila, column=32, value=f"=IF(COUNTIF($B$5:B{fila},B{fila})=1,1,0)")
+    # Sin filas de ejemplo: los datos reales arrancan en la 5. La columna aux viene
+    # pre-rellenada en todo el rango, igual que en el archivo real.
+    for fila in range(5, 20 + 1):
+        ws.cell(row=fila, column=30,
+                value=f'=IF(AND(COUNTIF($B$5:B{fila},B{fila})=1,$B{fila}<>"",$AB{fila}<>""),1,0)')
 
     dv_medio = DataValidation(type="list", formula1=f'"{",".join(MEDIOS)}"')
     dv_tema = DataValidation(type="list", formula1=f'"{",".join(TEMAS)}"')
@@ -105,9 +87,12 @@ def build_fixture_workbook() -> openpyxl.Workbook:
     ws.add_data_validation(dv_direccion)
     dv_direccion.add("AB5:AB20")
 
-    dv_intensidad = DataValidation(type="whole", operator="between", formula1="1", formula2="5")
-    ws.add_data_validation(dv_intensidad)
-    dv_intensidad.add("AD5:AD20")
-    dv_intensidad.add("AE5:AE20")
+    dv_actor = DataValidation(
+        type="list",
+        formula1='"Gobierno / Ejecutivo,Oposición / partidos políticos,Instituciones del Estado,'
+                 'Empresas y gremios,Sindicatos y organizaciones sociales,Ciudadanía afectada,'
+                 'Actores del deporte,Actor internacional,Otro / no identificable"')
+    ws.add_data_validation(dv_actor)
+    dv_actor.add("AC5:AC20")
 
     return wb

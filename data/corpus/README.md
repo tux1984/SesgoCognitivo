@@ -1,15 +1,20 @@
 # Datos del corpus
 
-- `grid_recoleccion_500_oraciones.xlsx` — grid de recolección (5 medios × 5 temas, 20 oraciones por
-  celda) + hoja `Corpus - oraciones` donde vive el corpus real con su anotación. Estructura completa
-  documentada en `src/sesgocognitivo/corpus/excel_writer.py`.
-- `esquemas_anotacion.xlsx` — documento de referencia con dos propuestas de esquema de anotación:
-  Tabla 1 (esquema completo, 9 categorías J1 léxico/J2 discursivo) y Tabla 2 (esquema simplificado,
-  descartado). **La hoja `Corpus - oraciones` implementa la Tabla 1** — es el esquema con el que se
-  anota en la práctica; Tabla 2 queda solo como referencia histórica en este archivo.
-- `manual_urls/` — fallback de curación manual: una URL por línea, por medio, para cuando el
-  descubrimiento automático de RSS/sitemap no encuentra un feed utilizable.
+- `corpus_multidominio_500_oraciones.xlsx` — el corpus. Cuatro hojas:
+  - `Corpus - oraciones` — las 500 oraciones, una por fila, de la fila 5 a la 504. Columnas
+    A–I y `url_fuente` vienen dadas (gris, no se editan); J–AC son las que llena el anotador
+    (amarillo): las 9 categorías con su span, `direccion` y `actor_objetivo`. La columna `aux`
+    es una fórmula que alimenta el grid; nunca se escribe a mano ni por el pipeline.
+  - `Grid de recoleccion` — tablero por medio × dominio. El % de avance mide la ANOTACIÓN:
+    cuenta las oraciones que ya tienen `direccion` llena.
+  - `Resumen` — totales por medio y por dominio, calculados desde el grid.
+  - `Leyenda` — instrucciones de uso y ejemplos anotados.
+  Estructura y reglas de escritura documentadas en `src/sesgocognitivo/corpus/excel_writer.py`.
+- `esquemas_anotacion.xlsx` — referencia del esquema de anotación: Tabla 1 (completo, el que se
+  usa: 9 categorías J1 léxico / J2 discursivo + dirección) y Tabla 2 (simplificado, derivable
+  desde la Tabla 1 y conservado solo como alternativa documentada).
+- `manual_urls/` — curación manual: una URL por línea (con su género), por medio y dominio, para
+  las celdas que el descubrimiento automático de RSS no alcanzaba a llenar.
 
-**No editar `grid_recoleccion_500_oraciones.xlsx` a mano mientras el pipeline de recolección esté
-corriendo** — puede pisar filas que el script está a punto de escribir. La columna `aux` (AF) de
-`Corpus - oraciones` es una fórmula auxiliar; nunca se escribe manualmente ni por el pipeline.
+**No editar el .xlsx a mano mientras el pipeline esté corriendo** — puede pisar filas que el
+script está a punto de escribir.

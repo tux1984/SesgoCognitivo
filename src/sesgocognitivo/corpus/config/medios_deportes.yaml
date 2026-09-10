@@ -10,6 +10,10 @@
 medios:
   - id: infobae
     nombre: "Infobae Colombia"
+    aviso_legal: >
+      Sin sección de opinión propia para Colombia: se confirmó en vivo que su feed de
+      opinión es el GLOBAL de Infobae, dominado por autores y temas argentinos. Por eso
+      va marcado con opinion_no_disponible y su cuota se atiende 100% con noticia dura.
     home: "https://www.infobae.com/colombia/"
     descubrir: false
     feeds:
@@ -20,6 +24,10 @@ medios:
 
   - id: eltiempo
     nombre: "El Tiempo"
+    aviso_legal: >
+      Aviso de copyright de El Tiempo prohíbe explícitamente el uso de su contenido para
+      IA/ML; pendiente de resolución legal con la universidad. Se incluye igual por
+      decisión deliberada (ver README.md) mientras se resuelve esa conversación.
     home: "https://www.eltiempo.com/"
     descubrir: false
     feeds:
@@ -33,6 +41,10 @@ medios:
 
   - id: elespectador
     nombre: "El Espectador"
+    aviso_legal: >
+      Riesgo de paywall "Premium", sobre todo en columnas de opinión: se mitiga con el
+      filtro de largo mínimo por artículo (collector.MIN_CUERPO_ARTICULO). Revisar en el
+      log los "Descartado por cuerpo sospechosamente corto" si el descarte sube mucho.
     home: "https://www.elespectador.com/"
     descubrir: false
     feeds:
@@ -42,6 +54,10 @@ medios:
 
   - id: semana
     nombre: "Semana"
+    aviso_legal: >
+      Sin RSS oficialmente documentado por el medio; se usa el feed genérico de Arc XP.
+      El género se infiere además por segmento de URL como red de seguridad, ya que
+      ninguno de los feeds es 100% puro.
     home: "https://www.semana.com/"
     descubrir: false
     feeds:

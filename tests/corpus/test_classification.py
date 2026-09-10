@@ -3,6 +3,7 @@ import openpyxl
 from sesgocognitivo.corpus.classification import clasificar_tema, inferir_genero
 from sesgocognitivo.corpus.config_loader import load_medios, load_temas
 from sesgocognitivo.corpus.excel_writer import leer_valores_permitidos
+from sesgocognitivo.common.paths import CORPUS_CONFIG_DIR as CONFIG_DIR
 
 
 def test_temas_yaml_nombres_coinciden_con_dropdown_real(fixture_wb_path):
@@ -16,18 +17,26 @@ def test_temas_yaml_nombres_coinciden_con_dropdown_real(fixture_wb_path):
 
 
 def test_medios_yaml_nombres_coinciden_con_dropdown_real(fixture_wb_path):
+    """Cada dominio tiene su propio yaml de medios; todos deben usar exactamente los
+    mismos nombres del dropdown (Deportes es la excepción: no incluye La Silla Vacía,
+    que no tiene cobertura deportiva, así que es un subconjunto)."""
     wb = openpyxl.load_workbook(fixture_wb_path)
     ws = wb["Corpus - oraciones"]
     nombres_dropdown = set(leer_valores_permitidos(ws, "C"))
-    nombres_yaml = {m.nombre for m in load_medios()}
-    assert nombres_dropdown == nombres_yaml
+    for archivo in sorted(CONFIG_DIR.glob("medios_*.yaml")):
+        nombres_yaml = {m.nombre for m in load_medios(archivo)}
+        assert nombres_yaml <= nombres_dropdown, f"{archivo.name} tiene medios fuera del dropdown"
+    assert {m.nombre for m in load_medios(CONFIG_DIR / "medios_salud.yaml")} == nombres_dropdown
 
 
 def test_clasificar_tema_por_keyword():
     temas = load_temas()
-    tema = clasificar_tema("El presidente habló de la reforma pensional en el congreso.", temas)
+    tema = clasificar_tema(
+        "Los sindicatos y el Gobierno discuten el aumento del salario mínimo y la reforma laboral.",
+        temas,
+    )
     assert tema is not None
-    assert tema.id == "reformas_sociales"
+    assert tema.id == "economia"
 
 
 def test_clasificar_tema_sin_coincidencia_devuelve_none():
@@ -35,42 +44,41 @@ def test_clasificar_tema_sin_coincidencia_devuelve_none():
     assert clasificar_tema("Receta de arroz con pollo para el domingo.", temas) is None
 
 
-def test_clasificar_tema_no_lo_absorbe_la_mencion_generica_del_presidente():
-    """Regresión: 'de la espriella' (keyword de Transición) aparece en casi cualquier nota
-    política porque es el presidente. Un texto con más coincidencias específicas de otro
-    tema debe ganarle, no perder por estar Transición primero en la lista de config."""
+def test_clasificar_tema_no_lo_absorbe_una_mencion_de_paso_de_otro_dominio():
+    """Regresión: una nota de salud que menciona de paso al ministro de Ambiente no debe
+    irse a medio_ambiente solo porque esa keyword aparezca. Gana el dominio con más
+    ocurrencias, no el que quede primero en la lista de config."""
     temas = load_temas()
     texto = (
-        "El presidente De la Espriella se reunió con funcionarios de Estados Unidos en "
-        "Washington para discutir aranceles con el enviado de Trump."
+        "La crisis de las EPS volvió a escalar: la reforma a la salud sigue trabada y el "
+        "Gobierno insiste en liquidar las EPS intervenidas. Varias EPS acumulan deudas y "
+        "la crisis de las EPS golpea a los pacientes. En la misma sesión habló el ministro "
+        "de ambiente sobre un tema distinto."
     )
     tema = clasificar_tema(texto, temas)
     assert tema is not None
-    assert tema.id == "relacion_eeuu"
+    assert tema.id == "salud"
 
 
 def test_clasificar_tema_ocurrencias_totales_desempatan_coincidencias_distintas_empatadas():
-    """Regresión: un artículo sobre embajadores/diplomacia con EE.UU. mencionaba de pasada
-    'ayuda de emergencia enviada tras el sismo', empatando 4 keywords DISTINTAS con
-    'terremoto' y 4 con 'relacion_eeuu'. Contando ocurrencias TOTALES (no solo presencia),
-    el tema realmente dominante (EE.UU./Washington, mencionado muchas veces) debe ganar."""
+    """Regresión: contar keywords DISTINTAS (presencia) deja empates que se resuelven por
+    orden de config, mandando el artículo al tema equivocado. Contando ocurrencias TOTALES
+    gana el dominio realmente dominante del texto."""
     temas = load_temas()
     texto = (
-        "Los embajadores designados ante Estados Unidos y Naciones Unidas se preparan. "
-        "Washington y Nueva York serán los escenarios centrales de la agenda con Estados "
-        "Unidos. El enviado de Rubio y las conversaciones sobre aranceles con Washington "
-        "marcarán el rumbo. También se mencionó la ayuda de emergencia enviada tras el "
-        "sismo, parte de la reconstrucción por el terremoto, como un punto secundario de "
-        "la agenda de Estados Unidos."
+        "El fracking volvió al debate: el ministro de ambiente defendió el fracking con "
+        "pilotos regulados y la deforestación sigue creciendo. El fracking cerca del "
+        "páramo de santurbán preocupa a las comunidades. En un párrafo aparte se citó la "
+        "reforma laboral y a los sindicatos como contexto económico del anuncio."
     )
     tema = clasificar_tema(texto, temas)
     assert tema is not None
-    assert tema.id == "relacion_eeuu"
+    assert tema.id == "medio_ambiente"
 
 
-def test_clasificar_tema_no_matchea_seguridad_alimentaria_como_seguridad_publica():
-    """Regresión: 'seguridad' a secas se quitó de las keywords del tema porque matcheaba
-    'seguridad alimentaria' en un artículo de biodiversidad sin relación con orden público."""
+def test_clasificar_tema_no_matchea_texto_sin_relacion_con_ningun_dominio():
+    """Regresión: keywords demasiado genéricas ('seguridad', 'salario mínimo' a secas)
+    matcheaban textos de otro tema. Un texto sin relación real debe devolver None."""
     temas = load_temas()
     texto = (
         "El estudio identificó especies de peces migratorios de las que depende la "

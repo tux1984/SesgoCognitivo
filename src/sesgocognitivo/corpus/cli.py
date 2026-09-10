@@ -17,7 +17,7 @@ from pathlib import Path
 import openpyxl
 
 from sesgocognitivo.common.logging_utils import setup_logging
-from sesgocognitivo.common.paths import GRID_XLSX, LOGS_DIR, MANUAL_URLS_DIR, MEDIOS_YAML, TEMAS_YAML
+from sesgocognitivo.common.paths import CORPUS_XLSX, LOGS_DIR, MANUAL_URLS_DIR, TEMAS_YAML
 from sesgocognitivo.corpus import discovery
 from sesgocognitivo.corpus.collector import recolectar_de_feed, recolectar_de_pagina, recolectar_manual
 from sesgocognitivo.corpus.config_loader import load_medios, load_temas
@@ -34,11 +34,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--manual-only", action="store_true", help="usa solo <manual-urls-dir>/<medio>.txt")
     parser.add_argument("--limite-por-feed", type=int, default=40)
     parser.add_argument("--forzar-spacy", action="store_true", help="fuerza el fallback spaCy (debug/pruebas)")
-    parser.add_argument("--config-temas", type=Path, default=TEMAS_YAML, help="yaml de temas alternativo (ej. temas_v2.yaml para otros dominios)")
-    parser.add_argument("--config-medios", type=Path, default=MEDIOS_YAML, help="yaml de medios alternativo")
-    parser.add_argument("--hoja-corpus", default=HOJA_CORPUS, help="hoja destino para las oraciones (ej. 'Corpus - oraciones v2')")
-    parser.add_argument("--hoja-grid", default=HOJA_GRID, help="hoja destino para los objetivos del grid (ej. 'Grid de recoleccion v2')")
-    parser.add_argument("--manual-urls-dir", type=Path, default=MANUAL_URLS_DIR, help="directorio de curación manual alternativo")
+    parser.add_argument("--config-temas", type=Path, default=TEMAS_YAML, help="yaml de temas (default: los 5 dominios del corpus)")
+    parser.add_argument(
+        "--config-medios", type=Path, required=True,
+        help="yaml de medios del dominio a recolectar (medios_economia.yaml, medios_salud.yaml, "
+             "medios_medioambiente.yaml o medios_deportes.yaml)")
+    parser.add_argument("--hoja-corpus", default=HOJA_CORPUS, help="hoja destino para las oraciones")
+    parser.add_argument("--hoja-grid", default=HOJA_GRID, help="hoja destino para los objetivos del grid")
+    parser.add_argument("--manual-urls-dir", type=Path, default=MANUAL_URLS_DIR, help="directorio de curación manual")
     return parser
 
 
@@ -60,7 +63,7 @@ def main(argv: list[str] | None = None) -> None:
         if m.aviso_legal:
             logger.warning("[%s] Aviso de gobernanza de datos: %s", m.id, m.aviso_legal)
 
-    wb = openpyxl.load_workbook(GRID_XLSX, data_only=False)
+    wb = openpyxl.load_workbook(CORPUS_XLSX, data_only=False)
     tracker = GridState.desde_workbook(wb, hoja_grid=args.hoja_grid, hoja_corpus=args.hoja_corpus)
     logger.info("Estado inicial del grid (medios seleccionados):\n%s", tracker.resumen_texto())
 
@@ -177,8 +180,8 @@ def main(argv: list[str] | None = None) -> None:
     if todas_las_filas:
         escritas = escribir_filas(wb, todas_las_filas, hoja_corpus=args.hoja_corpus)
         tracker.recomputar_columnas_fg(wb, hoja_grid=args.hoja_grid)
-        guardar_workbook_seguro(wb, GRID_XLSX)
-        logger.info("Escritas %d fila(s) nueva(s) en '%s'.", escritas, GRID_XLSX)
+        guardar_workbook_seguro(wb, CORPUS_XLSX)
+        logger.info("Escritas %d fila(s) nueva(s) en '%s'.", escritas, CORPUS_XLSX)
     else:
         logger.info("No hay filas nuevas para escribir en esta corrida.")
 

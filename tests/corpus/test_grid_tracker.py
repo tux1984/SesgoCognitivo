@@ -7,11 +7,9 @@ def test_lee_objetivos_y_conteos_iniciales(fixture_wb_path):
     wb = openpyxl.load_workbook(fixture_wb_path)
     tracker = GridState.desde_workbook(wb)
 
-    medio, tema = "El Tiempo", "Transición de gobierno y relación con la oposición"
+    medio, tema = "El Tiempo", "Política"
     assert tracker.objetivo(medio, tema, GENERO_DURA) == 14
-    # Las filas 5-7 son el ejemplo protegido (ART_0231/ART_0245) y NO deben contarse -- a
-    # diferencia de la fórmula SUMIFS real de la hoja Grid, que sí las cuenta por accidente
-    # (de ahí que el archivo real muestre H10=2). El tracker solo mira filas >= 8.
+    # El workbook ya no lleva filas de ejemplo: el rango de datos arranca vacío en la 5.
     assert tracker.n_oraciones(medio, tema, GENERO_DURA) == 0
     assert not tracker.esta_llena(medio, tema, GENERO_DURA)
     assert tracker.restante(medio, tema, GENERO_DURA) == 14
@@ -20,7 +18,7 @@ def test_lee_objetivos_y_conteos_iniciales(fixture_wb_path):
 def test_celda_sin_datos_previos_no_esta_llena(fixture_wb_path):
     wb = openpyxl.load_workbook(fixture_wb_path)
     tracker = GridState.desde_workbook(wb)
-    medio, tema = "Semana", "Seguridad y orden público"
+    medio, tema = "Semana", "Deportes"
     assert tracker.n_oraciones(medio, tema, GENERO_OPINION) == 0
     assert tracker.restante(medio, tema, GENERO_OPINION) == 10
     assert not tracker.esta_llena(medio, tema, GENERO_OPINION)
@@ -29,7 +27,7 @@ def test_celda_sin_datos_previos_no_esta_llena(fixture_wb_path):
 def test_registrar_actualiza_conteo_en_memoria(fixture_wb_path):
     wb = openpyxl.load_workbook(fixture_wb_path)
     tracker = GridState.desde_workbook(wb)
-    medio, tema = "Semana", "Seguridad y orden público"
+    medio, tema = "Semana", "Deportes"
 
     tracker.registrar(medio, tema, GENERO_OPINION, [f"X_S{i:02d}" for i in range(1, 11)], "X")
     assert tracker.n_oraciones(medio, tema, GENERO_OPINION) == 10
@@ -50,7 +48,7 @@ def test_articulo_ya_procesado_es_independiente_de_tema_y_genero(fixture_wb_path
     un género distinto cada vez -- la dedup por (medio,tema,genero) sola no lo detecta."""
     wb = openpyxl.load_workbook(fixture_wb_path)
     tracker = GridState.desde_workbook(wb)
-    medio, tema = "Semana", "Seguridad y orden público"
+    medio, tema = "Semana", "Deportes"
 
     assert not tracker.articulo_ya_procesado(medio, "ART_X")
     tracker.registrar(medio, tema, GENERO_DURA, ["ART_X_S01", "ART_X_S02"], "ART_X")
@@ -86,7 +84,7 @@ def test_numeracion_continua_desde_ids_ya_presentes_en_la_hoja(fixture_wb_path):
     ws["A8"] = "ART_005"
     ws["B8"] = "ART_005_S01"
     ws["C8"] = "Semana"
-    ws["D8"] = "Seguridad y orden público"
+    ws["D8"] = "Deportes"
     ws["E8"] = "Noticia dura"
     ws[f"{COLUMNA_URL}8"] = "https://example.test/ya-existente"
 

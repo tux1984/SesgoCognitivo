@@ -6,7 +6,7 @@ from pathlib import Path
 
 import yaml
 
-from sesgocognitivo.common.paths import MEDIOS_YAML, TEMAS_YAML
+from sesgocognitivo.common.paths import TEMAS_YAML
 
 
 @dataclasses.dataclass(frozen=True)
@@ -56,7 +56,7 @@ def load_temas(ruta: Path = TEMAS_YAML) -> list[Tema]:
     return [Tema(id=t["id"], nombre=t["nombre"], keywords=list(t["keywords"])) for t in data["temas"]]
 
 
-def load_medios(ruta: Path = MEDIOS_YAML) -> list[MedioConfig]:
+def load_medios(ruta: Path) -> list[MedioConfig]:
     data = yaml.safe_load(ruta.read_text(encoding="utf-8"))
     medios = []
     for m in data["medios"]:

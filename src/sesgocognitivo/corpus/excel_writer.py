@@ -1,13 +1,12 @@
 """Escritura al Excel del corpus -- reglas duras, no solo convención:
 
   * Solo se escribe en columnas A-I (metadato/segmentación) y en la columna de url_fuente
-    (ver COLUMNA_URL). NUNCA en J..AE ni en la columna de aux (ver COLUMNA_AUX): J..AE son
+    (ver COLUMNA_URL). NUNCA en J..AC ni en la columna de aux (ver COLUMNA_AUX): J..AC son
     de anotación humana (esquema completo de 9 categorías léxico/discursivo, ver
     docs/.../esquemas_anotacion.xlsx "Tabla 1"), la columna aux es la fórmula que alimenta
     el conteo de la hoja 'Grid de recoleccion'.
-  * Las filas 5-7 de 'Corpus - oraciones' son un ejemplo protegido; los datos reales SIEMPRE
-    empiezan en la fila 8 (fila_inicio=7 del script original era frágil: solo "funcionaba"
-    porque la fila 7 no estaba vacía).
+  * Los datos reales empiezan en la fila 5, justo debajo del header. El workbook ya no
+    lleva filas de ejemplo intercaladas: inflaban los conteos del grid y los filtros.
   * Cada valor de dropdown (medio/tema/género) se valida contra la lista real extraída de la
     propia validación de datos del archivo -- un drift entre `config/*.yaml` y el Excel se
     vuelve un ValueError explícito, no una fila corrupta silenciosa.
@@ -33,11 +32,11 @@ HOJA_CORPUS = "Corpus - oraciones"
 HOJAS_ESPERADAS = {"Grid de recoleccion", "Resumen", "Leyenda", "Corpus - oraciones"}
 
 FILA_HEADER = 4
-FILA_INICIO_DATOS = 8  # filas 5-7 = ejemplo protegido, nunca se tocan
+FILA_INICIO_DATOS = 5  # los datos arrancan justo debajo del header, sin filas de ejemplo
 FILA_FIN_DATOS = 557  # última fila pre-formateada / con validación de datos
 
-COLUMNA_AUX = "AF"  # fórmula auxiliar de conteo (ver 'Grid de recoleccion'!H); NUNCA se edita
-COLUMNA_URL = "AG"
+COLUMNA_AUX = "AD"  # fórmula auxiliar de conteo (ver 'Grid de recoleccion'!H); NUNCA se edita
+COLUMNA_URL = "AE"
 COLUMNA_URL_HEADER = "url_fuente"
 
 # Mapeo explícito campo -> columna. Deliberadamente NO usa enumerate/posición: así una
@@ -135,7 +134,7 @@ def escribir_filas(
     wb, filas: list, fila_inicio_minima: int = FILA_INICIO_DATOS, hoja_corpus: str = HOJA_CORPUS
 ) -> int:
     """Escribe `filas` (objetos con atributos = claves de COLUMNAS) empezando en la primera
-    fila libre >= fila_inicio_minima (nunca < 8). Nunca escribe en las columnas de anotación
+    fila libre >= fila_inicio_minima (nunca < 5). Nunca escribe en las columnas de anotación
     humana ni en la de aux (ver COLUMNA_AUX). Nunca escribe un
     oracion_id que ya exista en la hoja (ver `leer_oracion_ids_existentes`), sin importar de
     qué corrida/medio/tema venga -- red de seguridad dura contra duplicados, no solo una
@@ -205,9 +204,6 @@ def guardar_workbook_seguro(wb, ruta: Path) -> None:
         aux_muestra = ws_check[f"{COLUMNA_AUX}{FILA_INICIO_DATOS}"].value
         if not (isinstance(aux_muestra, str) and aux_muestra.startswith("=")):
             raise RuntimeError(f"Sanity check falló: la columna {COLUMNA_AUX} ya no contiene una fórmula.")
-        # Filas 5-7 (ejemplo protegido) deben seguir teniendo su articulo_id original.
-        if ws_check["A5"].value != "ART_0231" or ws_check["A7"].value != "ART_0245":
-            raise RuntimeError("Sanity check falló: las filas de ejemplo (5-7) fueron modificadas.")
     except Exception:
         verificacion.close()
         tmp.unlink(missing_ok=True)

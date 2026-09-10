@@ -67,7 +67,7 @@ cambio de creencia simulado.
 
 | Bloque | Contenido | Estado |
 |---|---|---|
-| 1 — Corpus | Recolección + segmentación de 500 oraciones reales (5 medios × 5 temas), esquema de anotación humana léxico/discursivo (9 categorías) | **500/500 recolectadas y verificadas, esquema de anotación listo** — pendiente la anotación humana (`src/sesgocognitivo/corpus/`) |
+| 1 — Corpus | Recolección + segmentación de 500 oraciones reales (5 medios × 5 dominios), esquema de anotación humana léxico/discursivo (9 categorías) | **500/500 recolectadas y auditadas, esquema de anotación listo** — pendiente la anotación humana (`src/sesgocognitivo/corpus/`) |
 | 2 — Detección | Inventario y evaluación de modelos preentrenados de detección de sesgo en español | Placeholder (`src/sesgocognitivo/deteccion/`) |
 | 3 — Recomendación | Selector con restricción de diversidad (métricas DART: Representación, Activación, Voces alternativas, Fragmentación) vs. baseline por relevancia | Placeholder (`src/sesgocognitivo/recomendador/`) |
 | 4 — Explicabilidad | Explicaciones en lenguaje natural vía LLM, priorizando mecanismos discursivos sobre léxicos | Placeholder (`src/sesgocognitivo/explicaciones/`) |
@@ -114,7 +114,16 @@ usado solo si SaT no está disponible en el entorno (ver `src/sesgocognitivo/cor
 
 ```bash
 python -m sesgocognitivo.corpus.cli --help
+
+# La recolección es por dominio: cada uno tiene sus propios feeds.
+python -m sesgocognitivo.corpus.cli \
+  --config-medios src/sesgocognitivo/corpus/config/medios_salud.yaml \
+  --manual-only --dry-run
 ```
+
+`--dry-run` reporta el avance sin escribir al Excel. Es el paso obligatorio antes de
+cualquier corrida real: atrapa clasificaciones erróneas y ruido nuevo antes de que lleguen
+al corpus.
 
 ## Aviso de gobernanza de datos — El Tiempo
 
@@ -125,34 +134,40 @@ es un riesgo aceptado a propósito y documentado aquí, no un descuido.
 
 ## Estado de la recolección: 500/500 ✅
 
-Recolección real ejecutada (no simulada) contra los 5 medios, con extracción vía JSON-LD (incluyendo
-el patrón `@graph` de schema.org) como fuente principal del cuerpo y la fecha, heurística de
-contenedor principal como respaldo, deduplicación global por artículo, y un filtro de largo mínimo por
-artículo que descarta contenido sospechosamente corto (paywall/teaser). El corpus fue auditado a fondo
-tras la recolección inicial: sin duplicados, sin fechas faltantes, sin boilerplate/ruido publicitario,
-y con la clasificación temática de cada artículo verificada individualmente (11 artículos mal
-clasificados por coincidencia incidental de palabra clave fueron identificados y reemplazados). 41/41
-tests dirigidos pasan.
+El corpus vive en **`data/corpus/corpus_multidominio_500_oraciones.xlsx`**: 500 oraciones de
+89 artículos, repartidas en 5 dominios de 100 oraciones cada uno — Política, Economía y
+negocios, Salud, Medio ambiente y Deportes — sobre los mismos 5 medios. Cada dominio cubre un
+debate genuinamente polarizante (reforma laboral y salario mínimo, crisis de las EPS, fracking
+y páramo de Santurbán, Selección Colombia y arbitraje), para no evaluar la herramienta solo
+sobre contenido político.
 
-**Redistribuciones de objetivo documentadas** (celdas del grid sin oferta suficiente de contenido
-propio, resueltas moviendo el objetivo íntegro de opinión a noticia dura del mismo medio, preservando
-siempre el total de 20 oraciones/celda):
+Recolección real ejecutada (no simulada), con extracción vía JSON-LD (incluyendo el patrón
+`@graph` de schema.org) como fuente principal del cuerpo y la fecha, heurística de contenedor
+principal como respaldo, deduplicación global por artículo, y un filtro de largo mínimo que
+descarta contenido sospechosamente corto (paywall/teaser).
 
-- **Infobae Colombia** no tiene sección de opinión propia de Colombia (confirmado sobre 100 columnas
-  de su feed de opinión: solo 3 mencionan Colombia, ninguna coincide con los 5 temas del corpus).
-  Objetivo de opinión (6/tema) redistribuido íntegro a su propia noticia dura (14→20 por tema). Ver
-  `medios.yaml` (`opinion_no_disponible`).
-- **El Espectador / Seguridad y orden público**: su feed de opinión no tenía contenido sobre ese tema
-  específico (6→20 en noticia dura).
-- **El Tiempo / Relación con Estados Unidos**: no se encontró una columna de opinión propia sobre este
-  tema en circulación (se probaron ~15 candidatas) (14→20 en noticia dura).
+El corpus fue auditado oración por oración: sin duplicados de id ni de texto, sin fechas
+faltantes, sin boilerplate ni artefactos de maquetación (pies de foto, subtítulos de sección,
+teasers de enlace interno), y con la clasificación temática de cada artículo verificada contra
+el contexto real de sus palabras clave, no solo contra el conteo.
 
-El esquema de anotación quedó definido como la **Tabla 1** de `esquemas_anotacion.xlsx` (esquema
-completo: 5 categorías léxicas J1 + 4 discursivas J2, cada una con su span, más dirección/actor
-objetivo/intensidad) — es el que implementa la hoja `Corpus - oraciones`, una fila por oración.
+**Redistribuciones de objetivo documentadas** (celdas sin oferta suficiente de contenido
+propio, resueltas moviendo el objetivo a otro género o medio y dejando la nota en el grid):
 
-Detalle completo por celda: correr
-`python -c "from sesgocognitivo.corpus.grid_tracker import GridState; import openpyxl; print(GridState.desde_workbook(openpyxl.load_workbook('data/corpus/grid_recoleccion_500_oraciones.xlsx')).resumen_texto())"`.
+- **Infobae Colombia** no tiene sección de opinión propia de Colombia: se confirmó que su feed
+  de opinión es el global, dominado por autores argentinos. Su cuota va 100% a noticia dura
+  (`opinion_no_disponible` en los `medios_*.yaml`).
+- **La Silla Vacía / Deportes**: sin cobertura deportiva activa en la ventana del corpus; su
+  cuota se redistribuyó entre los otros cuatro medios.
+- **Semana / Deportes (opinión)**: no tiene columnistas de opinión deportiva; esa cuota pasó a
+  El Tiempo y El Espectador.
+
+El esquema de anotación es la **Tabla 1** de `esquemas_anotacion.xlsx`: 5 categorías léxicas J1
++ 4 discursivas J2, cada una con su span, más `direccion` y `actor_objetivo` (lista cerrada de
+9 roles). Lo implementa la hoja `Corpus - oraciones`, una fila por oración.
+
+Detalle por celda:
+`python -c "from sesgocognitivo.corpus.grid_tracker import GridState; import openpyxl; from sesgocognitivo.common.paths import CORPUS_XLSX; print(GridState.desde_workbook(openpyxl.load_workbook(CORPUS_XLSX)).resumen_texto())"`.
 
 ## Referencias
 

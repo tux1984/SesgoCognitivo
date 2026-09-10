@@ -27,7 +27,7 @@ HOJA_CORPUS = "Corpus - oraciones"
 GRID_FILA_INICIO = 5
 GRID_FILA_FIN = 29
 
-CORPUS_FILA_INICIO = 8  # filas 5-7 son ejemplo protegido, nunca se cuentan aquí
+CORPUS_FILA_INICIO = 5  # los datos arrancan justo debajo del header
 CORPUS_FILA_FIN = 557
 
 __all__ = [
