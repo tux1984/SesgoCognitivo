@@ -1,0 +1,4 @@
+# Curación manual para el corpus v2 (multi-dominio). Formato: URL,género (opcional).
+# Líneas que empiecen con # se ignoran.
+https://www.lasillavacia.com/silla-nacional/alza-historica-del-salario-minimo-pocos-ganan-muchos-pierden/,Noticia dura
+https://www.lasillavacia.com/silla-nacional/y-la-quincena-preguntas-y-respuestas-sobre-la-suspension-del-salario-minimo/,Noticia dura

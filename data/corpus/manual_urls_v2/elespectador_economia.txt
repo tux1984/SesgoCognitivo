@@ -1,0 +1,5 @@
+# Curación manual para el corpus v2 (multi-dominio). Formato: URL,género (opcional).
+# Líneas que empiecen con # se ignoran.
+https://www.elespectador.com/economia/que-dice-y-por-que-genera-polemica-el-decreto-de-negociacion-colectiva-del-gobierno-noticias-colombia/,Noticia dura
+https://www.elespectador.com/opinion/editorial/editorial-reforma-laboral-la-politica-si-sirve-cuando-quiere/,Opinión-análisis
+https://www.elespectador.com/opinion/columnistas/armando-montenegro/el-costo-fiscal-de-la-reforma-laboral/,Opinión-análisis

@@ -1,0 +1,6 @@
+# Curación manual para el corpus v2 (multi-dominio). Formato: URL,género (opcional).
+# Líneas que empiecen con # se ignoran.
+https://www.semana.com/economia/macroeconomia/articulo/con-el-salario-minimo-2026-sindicatos-pelearan-por-alza-de-dos-digitos-confirma-presidente-de-la-cut/202510/,Noticia dura
+https://www.semana.com/economia/macroeconomia/articulo/propuesta-de-empresarios-para-alza-del-salario-minimo-en-721-es-mas-que-generosa-fenalco/202507/,Noticia dura
+https://www.semana.com/economia/macroeconomia/articulo/salvedades-a-propuestas-de-alza-del-salario-minimo-2026-sindicatos-y-empresarios-destaparon-sus-reparos-ninguno-cede-un-apice/202532/,Noticia dura
+https://www.semana.com/economia/opinion/articulo/septiembre-y-la-gran-pregunta-de-los-presupuestos-cuanto-subira-el-salario-minimo-en-2027/202600/,Opinión-análisis

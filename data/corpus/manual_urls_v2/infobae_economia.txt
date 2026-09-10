@@ -1,0 +1,7 @@
+# Curación manual para el corpus v2 (multi-dominio). Formato: URL,género (opcional).
+# Líneas que empiecen con # se ignoran.
+# Decreto 0234 de negociación colectiva -- Fenalco vs. Gobierno/CUT, verificado con fetch real:
+https://www.infobae.com/colombia/2026/03/09/nueva-medida-del-gobierno-petro-hara-que-los-trabajadores-hagan-un-nuevo-pago-a-los-sindicatos-empresas-asumiran-otras-obligaciones/,Noticia dura
+https://www.infobae.com/colombia/2026/03/17/empresas-y-trabajadores-tendran-varias-dificultades-a-la-hora-de-aplicar-la-negociacion-colectiva-que-establecio-el-gobierno-petro/,Noticia dura
+https://www.infobae.com/colombia/2026/03/26/nueva-disputa-por-reforma-laboral-gobierno-defiende-decreto-y-fenalco-lo-lleva-a-la-justicia/,Noticia dura
+https://www.infobae.com/colombia/2025/12/20/salario-minimo-2026-al-rojo-vivo-sindicatos-piden-alza-del-16-y-la-negociacion-termina-en-ruptura/,Noticia dura

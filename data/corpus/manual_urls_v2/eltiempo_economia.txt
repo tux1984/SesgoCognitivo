@@ -1,0 +1,8 @@
+# Curación manual para el corpus v2 (multi-dominio). Formato: URL,género (opcional).
+# Líneas que empiecen con # se ignoran.
+https://www.eltiempo.com/economia/sector-financiero/gobierno-reglamenta-por-decreto-la-negociacion-colectiva-y-abre-nuevo-capitulo-en-las-relaciones-laborales-3538964,Noticia dura
+https://www.eltiempo.com/justicia/investigacion/el-debate-de-juristas-por-el-nuevo-decreto-de-negociacion-colectiva-para-sindicatos-y-empresas-que-sacude-el-modelo-laboral-3541656,Noticia dura
+https://www.eltiempo.com/opinion/columnistas/implicaciones-salario-minimo-3525040,Opinión-análisis
+https://www.eltiempo.com/opinion/editorial/minimo-de-discusion-3513132,Opinión-análisis
+https://www.eltiempo.com/opinion/columnistas/margarita-cabello-blanco/columna-de-margarita-cabello-los-riesgos-de-la-reforma-laboral-753590,Opinión-análisis
+https://www.eltiempo.com/opinion/columnistas/una-reforma-laboral-controversial-3436208,Opinión-análisis
