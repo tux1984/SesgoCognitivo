@@ -1,0 +1,54 @@
+# Medios para el dominio "Salud" del corpus v2 -- ángulo: crisis de las EPS / reforma a
+# la salud (ver temas_v2.yaml). Los feeds de sección "salud" existen y validan, pero
+# muchas de las historias específicas de la crisis EPS son de meses atrás (no salen en
+# los últimos ítems del RSS) -- se complementan fuerte con curación manual verificada.
+medios:
+  - id: infobae
+    nombre: "Infobae Colombia"
+    home: "https://www.infobae.com/colombia/"
+    descubrir: false
+    feeds:
+      dura: "https://www.infobae.com/arc/outboundfeeds/rss/category/colombia/"
+      opinion: null
+    opinion_no_disponible: true
+    manual_fallback: "infobae_salud"
+
+  - id: eltiempo
+    nombre: "El Tiempo"
+    home: "https://www.eltiempo.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.eltiempo.com/rss/salud.xml"
+      opinion: null
+    manual_fallback: "eltiempo_salud"
+    paginas_adicionales:
+      - url: "https://www.eltiempo.com/opinion"
+        incluir: ["/opinion/columnistas/", "/opinion/editorial/"]
+        excluir: ["/opinion/caricaturas/"]
+
+  - id: elespectador
+    nombre: "El Espectador"
+    home: "https://www.elespectador.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.elespectador.com/arc/outboundfeeds/discover/category/salud/?outputType=xml"
+      opinion: "https://www.elespectador.com/arc/outboundfeeds/discover/category/opinion/?outputType=xml"
+    manual_fallback: "elespectador_salud"
+
+  - id: lasillavacia
+    nombre: "La Silla Vacía"
+    home: "https://lasillavacia.com/"
+    descubrir: false
+    feeds:
+      dura: "https://lasillavacia.com/tag/salud/feed/"
+      opinion: "https://lasillavacia.com/tag/salud/feed/"
+    manual_fallback: "lasillavacia_salud"
+
+  - id: semana
+    nombre: "Semana"
+    home: "https://www.semana.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.semana.com/arc/outboundfeeds/rss/category/salud/"
+      opinion: "https://www.semana.com/arc/outboundfeeds/rss/category/opinion/"
+    manual_fallback: "semana_salud"

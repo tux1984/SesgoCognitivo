@@ -1,0 +1,61 @@
+# Medios para el dominio "Economía y negocios" del corpus v2. Mismos 5 medios, feeds
+# apuntando a sus secciones de economía en vez de política/opinión general.
+medios:
+  - id: infobae
+    nombre: "Infobae Colombia"
+    home: "https://www.infobae.com/colombia/"
+    descubrir: false
+    feeds:
+      # OJO (mismo hallazgo que en medios.yaml para su feed de opinión): Infobae NO tiene
+      # un feed de economía específico de Colombia -- .../category/economia/ es el feed
+      # GLOBAL de Infobae, dominado por contenido de Argentina (Caputo, Vaca Muerta,
+      # Malvinas). Se usa el feed general "colombia" (ya confirmado 100% colombiano en el
+      # corpus original) y se deja que clasificar_tema() filtre lo económico real; se
+      # complementa con curación manual si el volumen resulta insuficiente.
+      dura: "https://www.infobae.com/arc/outboundfeeds/rss/category/colombia/"
+      opinion: null
+    opinion_no_disponible: true
+    manual_fallback: "infobae_economia"
+
+  - id: eltiempo
+    nombre: "El Tiempo"
+    home: "https://www.eltiempo.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.eltiempo.com/rss/economia.xml"
+      opinion: null
+    manual_fallback: "eltiempo_economia"
+    paginas_adicionales:
+      - url: "https://www.eltiempo.com/opinion"
+        incluir: ["/opinion/columnistas/", "/opinion/editorial/"]
+        excluir: ["/opinion/caricaturas/"]
+
+  - id: elespectador
+    nombre: "El Espectador"
+    home: "https://www.elespectador.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.elespectador.com/arc/outboundfeeds/discover/category/economia/?outputType=xml"
+      opinion: "https://www.elespectador.com/arc/outboundfeeds/discover/category/opinion/?outputType=xml"
+    manual_fallback: "elespectador_economia"
+
+  - id: lasillavacia
+    nombre: "La Silla Vacía"
+    home: "https://lasillavacia.com/"
+    descubrir: false
+    feeds:
+      dura: "https://lasillavacia.com/tag/reforma-laboral/feed/"
+      opinion: "https://lasillavacia.com/tag/reforma-laboral/feed/"
+    manual_fallback: "lasillavacia_economia"
+    feeds_adicionales:
+      - "https://lasillavacia.com/tag/salario-minimo/feed/"
+      - "https://lasillavacia.com/tag/economia/feed/"
+
+  - id: semana
+    nombre: "Semana"
+    home: "https://www.semana.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.semana.com/arc/outboundfeeds/rss/category/economia/"
+      opinion: "https://www.semana.com/arc/outboundfeeds/rss/category/opinion/"
+    manual_fallback: "semana_economia"

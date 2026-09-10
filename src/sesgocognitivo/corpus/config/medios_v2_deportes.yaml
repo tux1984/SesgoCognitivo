@@ -1,0 +1,50 @@
+# Medios para el dominio "Deportes" del corpus v2 -- ángulo: decisiones polémicas de
+# Néstor Lorenzo en la Selección Colombia (prelista, caso Sebastián Villa) y disputas de
+# arbitraje/dirigencia en Dimayor (ver temas_v2.yaml).
+#
+# La Silla Vacía se investigó y confirmó SIN cobertura deportiva activa en 2025-2026 (solo
+# perfiles de archivo y piezas de 2020-2021 sobre corrupción en la FCF, fuera de la ventana
+# temporal del corpus) -- se omite de este archivo a propósito, y su cuota del grid (20
+# oraciones) ya se redistribuyó a los otros 4 medios en 'Grid de recoleccion v2' (mismo
+# patrón que la redistribución de Infobae/opinión en el corpus original).
+medios:
+  - id: infobae
+    nombre: "Infobae Colombia"
+    home: "https://www.infobae.com/colombia/"
+    descubrir: false
+    feeds:
+      dura: "https://www.infobae.com/arc/outboundfeeds/rss/category/deportes/"
+      opinion: null
+    opinion_no_disponible: true
+    manual_fallback: "infobae_deportes"
+
+  - id: eltiempo
+    nombre: "El Tiempo"
+    home: "https://www.eltiempo.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.eltiempo.com/rss/deportes.xml"
+      opinion: null
+    manual_fallback: "eltiempo_deportes"
+    paginas_adicionales:
+      - url: "https://www.eltiempo.com/opinion"
+        incluir: ["/opinion/columnistas/", "/opinion/editorial/"]
+        excluir: ["/opinion/caricaturas/"]
+
+  - id: elespectador
+    nombre: "El Espectador"
+    home: "https://www.elespectador.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.elespectador.com/arc/outboundfeeds/discover/category/deportes/?outputType=xml"
+      opinion: "https://www.elespectador.com/arc/outboundfeeds/discover/category/opinion/?outputType=xml"
+    manual_fallback: "elespectador_deportes"
+
+  - id: semana
+    nombre: "Semana"
+    home: "https://www.semana.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.semana.com/arc/outboundfeeds/rss/category/deportes/"
+      opinion: "https://www.semana.com/arc/outboundfeeds/rss/category/opinion/"
+    manual_fallback: "semana_deportes"

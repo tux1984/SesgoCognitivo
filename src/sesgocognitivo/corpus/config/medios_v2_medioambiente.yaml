@@ -1,0 +1,55 @@
+# Medios para el dominio "Medio ambiente" del corpus v2 -- ángulo: choque de gobiernos
+# Petro -> De la Espriella sobre fracking y minería en el páramo de Santurbán (ver
+# temas_v2.yaml). Se recolecta 100% vía curación manual verificada (mismo patrón que
+# Economía y Salud): los feeds de sección ambiental existen pero las historias específicas
+# de este choque puntual no siempre están entre los últimos ítems del RSS.
+medios:
+  - id: infobae
+    nombre: "Infobae Colombia"
+    home: "https://www.infobae.com/colombia/"
+    descubrir: false
+    feeds:
+      dura: "https://www.infobae.com/arc/outboundfeeds/rss/category/colombia/"
+      opinion: null
+    opinion_no_disponible: true
+    manual_fallback: "infobae_medioambiente"
+
+  - id: eltiempo
+    nombre: "El Tiempo"
+    home: "https://www.eltiempo.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.eltiempo.com/rss/vida_medioambiente.xml"
+      opinion: null
+    manual_fallback: "eltiempo_medioambiente"
+    paginas_adicionales:
+      - url: "https://www.eltiempo.com/opinion"
+        incluir: ["/opinion/columnistas/", "/opinion/editorial/"]
+        excluir: ["/opinion/caricaturas/"]
+
+  - id: elespectador
+    nombre: "El Espectador"
+    home: "https://www.elespectador.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.elespectador.com/arc/outboundfeeds/discover/category/ambiente/?outputType=xml"
+      opinion: "https://www.elespectador.com/arc/outboundfeeds/discover/category/opinion/?outputType=xml"
+    manual_fallback: "elespectador_medioambiente"
+
+  - id: lasillavacia
+    nombre: "La Silla Vacía"
+    home: "https://lasillavacia.com/"
+    descubrir: false
+    feeds:
+      dura: "https://lasillavacia.com/tag/medio-ambiente/feed/"
+      opinion: "https://lasillavacia.com/tag/medio-ambiente/feed/"
+    manual_fallback: "lasillavacia_medioambiente"
+
+  - id: semana
+    nombre: "Semana"
+    home: "https://www.semana.com/"
+    descubrir: false
+    feeds:
+      dura: "https://www.semana.com/arc/outboundfeeds/rss/category/sostenible/"
+      opinion: "https://www.semana.com/arc/outboundfeeds/rss/category/opinion/"
+    manual_fallback: "semana_medioambiente"

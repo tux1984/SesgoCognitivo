@@ -1,0 +1,77 @@
+# Temas del corpus multi-dominio v2. "Política" es un subset curado ya copiado desde el
+# corpus original (Transición/EEUU/Reformas/Seguridad, sin Terremoto) -- su celda está
+# cerrada (ver 'Grid de recoleccion v2'), por eso sus keywords quedan vacías a propósito:
+# nunca debe ganar la clasificación de un artículo nuevo que se esté recolectando para
+# alguno de los otros 4 dominios.
+temas:
+  - id: politica_v2
+    nombre: "Política"
+    keywords: []
+
+  - id: economia
+    nombre: "Economía y negocios"
+    # "salario mínimo" a secas se descartó: en el periodismo judicial/administrativo
+    # colombiano cualquier multa o sanción se expresa rutinariamente en "salarios mínimos"
+    # (ej. "multa de 15 días de salario mínimo" en una nota de tránsito) -- mismo tipo de
+    # trampa que "emergencia" (médica vs. terremoto) del corpus original. Se usan frases
+    # compuestas que solo aparecen en el debate real de fijación salarial.
+    keywords:
+      - "reforma laboral"
+      - "aumento del salario mínimo"
+      - "incremento del salario mínimo"
+      - "alza del salario mínimo"
+      - "sindicatos"
+      - "negociación colectiva"
+      - "libre competencia"
+      - "gremios empresariales"
+
+  - id: salud
+    nombre: "Salud"
+    # Ángulo: crisis de las EPS y reforma a la salud (gobierno/sindicatos vs. EPS/gremios
+    # vs. pacientes) -- verificado con investigación real, es una historia constante y
+    # genuinamente polarizada en 2026, distinta de "reforma pensional" (ya cubierta en
+    # el dominio Política).
+    keywords:
+      - "eps"
+      - "reforma a la salud"
+      - "liquidar las eps"
+      - "liquidación de eps"
+      - "eps intervenida"
+      - "crisis de las eps"
+
+  - id: medio_ambiente
+    nombre: "Medio ambiente"
+    # Ángulo: el choque de gobiernos Petro -> De la Espriella (posesión 7 ago 2026) sobre
+    # fracking y minería en el páramo de Santurbán domina la cobertura real 2025-2026 en
+    # los 5 medios, más que deforestación pura o transición energética aislada. Se evitan
+    # a propósito palabras sueltas como "medio ambiente" o "emergencia"/"reconstrucción"
+    # (esta última es el mismo tipo de homónimo del terremoto ya detectado en el corpus
+    # original).
+    keywords:
+      - "fracking"
+      - "páramo de santurbán"
+      - "deforestación"
+      - "licencia ambiental"
+      - "acuerdo de escazú"
+      - "reserva intocable para minería"
+      - "ministro de ambiente"
+      - "minambiente"
+      - "transición energética"
+
+  - id: deportes
+    nombre: "Deportes"
+    # Ángulo: decisiones polémicas de Néstor Lorenzo en la Selección Colombia (prelista,
+    # caso Sebastián Villa) y disputas de arbitraje/dirigencia (Dimayor). La Silla Vacía se
+    # confirmó (investigación real) sin cobertura deportiva activa en 2025-2026; su cuota
+    # del grid se redistribuyó a los otros 4 medios (ver 'Grid de recoleccion v2').
+    keywords:
+      - "selección colombia"
+      - "néstor lorenzo"
+      - "sebastián villa"
+      - "dimayor"
+      - "liga betplay"
+      - "mundial 2026"
+      - "federación colombiana de fútbol"
+      - "comisión arbitral"
+      - "james rodríguez"
+      - "copa américa"
