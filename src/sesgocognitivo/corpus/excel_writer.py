@@ -27,6 +27,9 @@ from openpyxl.utils import column_index_from_string
 logger = logging.getLogger("sesgocognitivo")
 
 HOJA_CORPUS = "Corpus - oraciones"
+# Sanity check en guardar_workbook_seguro: estas hojas SIEMPRE deben existir, pero el
+# workbook puede tener otras además (ej. 'Corpus - oraciones v2' para un corpus paralelo)
+# -- por eso es un subconjunto requerido, no una igualdad exacta de sheetnames.
 HOJAS_ESPERADAS = {"Grid de recoleccion", "Resumen", "Leyenda", "Corpus - oraciones"}
 
 FILA_HEADER = 4
@@ -78,11 +81,12 @@ def encontrar_primera_fila_vacia(ws, columna: str = "B", fila_inicio: int = FILA
     return fila
 
 
-def configurar_columna_url(wb) -> None:
+def configurar_columna_url(wb, hoja_corpus: str = HOJA_CORPUS) -> None:
     """Idempotente: agrega la columna de url_fuente (ver COLUMNA_URL) si todavía no existe.
     Copia el estilo de la columna aux (COLUMNA_AUX) para el header y extiende AMBOS títulos
-    combinados hasta la nueva columna."""
-    ws = wb[HOJA_CORPUS]
+    combinados hasta la nueva columna. `hoja_corpus` permite operar sobre una hoja paralela
+    (ej. 'Corpus - oraciones v2') en vez de la principal."""
+    ws = wb[hoja_corpus]
     header_cell = ws[f"{COLUMNA_URL}{FILA_HEADER}"]
     if header_cell.value == COLUMNA_URL_HEADER:
         return
@@ -108,7 +112,7 @@ def configurar_columna_url(wb) -> None:
             destino.alignment = copy(origen.alignment)
 
     ws.column_dimensions[COLUMNA_URL].width = 45
-    logger.info("Columna %s ('%s') configurada en '%s'.", COLUMNA_URL, COLUMNA_URL_HEADER, HOJA_CORPUS)
+    logger.info("Columna %s ('%s') configurada en '%s'.", COLUMNA_URL, COLUMNA_URL_HEADER, hoja_corpus)
 
 
 def leer_oracion_ids_existentes(ws, fila_inicio: int = FILA_INICIO_DATOS, fila_fin: int = FILA_FIN_DATOS) -> set:
@@ -127,7 +131,9 @@ def leer_oracion_ids_existentes(ws, fila_inicio: int = FILA_INICIO_DATOS, fila_f
     }
 
 
-def escribir_filas(wb, filas: list, fila_inicio_minima: int = FILA_INICIO_DATOS) -> int:
+def escribir_filas(
+    wb, filas: list, fila_inicio_minima: int = FILA_INICIO_DATOS, hoja_corpus: str = HOJA_CORPUS
+) -> int:
     """Escribe `filas` (objetos con atributos = claves de COLUMNAS) empezando en la primera
     fila libre >= fila_inicio_minima (nunca < 8). Nunca escribe en las columnas de anotación
     humana ni en la de aux (ver COLUMNA_AUX). Nunca escribe un
@@ -135,9 +141,10 @@ def escribir_filas(wb, filas: list, fila_inicio_minima: int = FILA_INICIO_DATOS)
     qué corrida/medio/tema venga -- red de seguridad dura contra duplicados, no solo una
     convención confiada al tracker en memoria. Devuelve cuántas filas se escribieron
     realmente (puede ser menos que len(filas) si se llega a la fila 557 o si algunas venían
-    duplicadas)."""
-    ws = wb[HOJA_CORPUS]
-    configurar_columna_url(wb)
+    duplicadas). `hoja_corpus` permite escribir en una hoja paralela (ej. un corpus v2 de
+    otros dominios) sin tocar 'Corpus - oraciones'."""
+    ws = wb[hoja_corpus]
+    configurar_columna_url(wb, hoja_corpus=hoja_corpus)
 
     valores_medio = set(leer_valores_permitidos(ws, "C"))
     valores_tema = set(leer_valores_permitidos(ws, "D"))
@@ -192,8 +199,8 @@ def guardar_workbook_seguro(wb, ruta: Path) -> None:
 
     verificacion = openpyxl.load_workbook(tmp, data_only=False)
     try:
-        if set(verificacion.sheetnames) != HOJAS_ESPERADAS:
-            raise RuntimeError(f"Sanity check falló: hojas inesperadas {verificacion.sheetnames}")
+        if not HOJAS_ESPERADAS.issubset(set(verificacion.sheetnames)):
+            raise RuntimeError(f"Sanity check falló: faltan hojas esperadas, hay: {verificacion.sheetnames}")
         ws_check = verificacion[HOJA_CORPUS]
         aux_muestra = ws_check[f"{COLUMNA_AUX}{FILA_INICIO_DATOS}"].value
         if not (isinstance(aux_muestra, str) and aux_muestra.startswith("=")):

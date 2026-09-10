@@ -190,10 +190,13 @@ def recolectar_manual(
     temas: list[Tema],
     segmentar,
     tracker: GridState,
+    manual_urls_dir=MANUAL_URLS_DIR,
 ) -> list[FilaOracion]:
+    """`manual_urls_dir` permite apuntar a un directorio paralelo (ej. curación manual de
+    un dominio nuevo) sin tocar `data/corpus/manual_urls/` del corpus principal."""
     if not medio.manual_fallback:
         return []
-    ruta = MANUAL_URLS_DIR / f"{medio.manual_fallback}.txt"
+    ruta = manual_urls_dir / f"{medio.manual_fallback}.txt"
     if not ruta.exists():
         logger.warning("No existe archivo de curación manual: %s", ruta)
         return []

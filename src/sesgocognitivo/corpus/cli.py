@@ -12,16 +12,17 @@ import argparse
 import dataclasses
 import json
 from datetime import datetime
+from pathlib import Path
 
 import openpyxl
 
 from sesgocognitivo.common.logging_utils import setup_logging
-from sesgocognitivo.common.paths import GRID_XLSX, LOGS_DIR
+from sesgocognitivo.common.paths import GRID_XLSX, LOGS_DIR, MANUAL_URLS_DIR, MEDIOS_YAML, TEMAS_YAML
 from sesgocognitivo.corpus import discovery
 from sesgocognitivo.corpus.collector import recolectar_de_feed, recolectar_de_pagina, recolectar_manual
 from sesgocognitivo.corpus.config_loader import load_medios, load_temas
 from sesgocognitivo.corpus.excel_writer import escribir_filas, guardar_workbook_seguro
-from sesgocognitivo.corpus.grid_tracker import GENERO_DURA, GENERO_OPINION, GridState
+from sesgocognitivo.corpus.grid_tracker import GENERO_DURA, GENERO_OPINION, HOJA_CORPUS, HOJA_GRID, GridState
 from sesgocognitivo.corpus.segmentation import get_segmenter
 
 
@@ -30,9 +31,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--medios", nargs="*", default=None, help="ids de medios a procesar (default: todos)")
     parser.add_argument("--dry-run", action="store_true", help="no escribe al Excel, solo reporta")
     parser.add_argument("--discover-only", action="store_true", help="solo descubre feeds, no recolecta")
-    parser.add_argument("--manual-only", action="store_true", help="usa solo data/corpus/manual_urls/<medio>.txt")
+    parser.add_argument("--manual-only", action="store_true", help="usa solo <manual-urls-dir>/<medio>.txt")
     parser.add_argument("--limite-por-feed", type=int, default=40)
     parser.add_argument("--forzar-spacy", action="store_true", help="fuerza el fallback spaCy (debug/pruebas)")
+    parser.add_argument("--config-temas", type=Path, default=TEMAS_YAML, help="yaml de temas alternativo (ej. temas_v2.yaml para otros dominios)")
+    parser.add_argument("--config-medios", type=Path, default=MEDIOS_YAML, help="yaml de medios alternativo")
+    parser.add_argument("--hoja-corpus", default=HOJA_CORPUS, help="hoja destino para las oraciones (ej. 'Corpus - oraciones v2')")
+    parser.add_argument("--hoja-grid", default=HOJA_GRID, help="hoja destino para los objetivos del grid (ej. 'Grid de recoleccion v2')")
+    parser.add_argument("--manual-urls-dir", type=Path, default=MANUAL_URLS_DIR, help="directorio de curación manual alternativo")
     return parser
 
 
@@ -42,8 +48,8 @@ def main(argv: list[str] | None = None) -> None:
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     logger = setup_logging(f"corpus_run_{ts}.log")
 
-    temas = load_temas()
-    medios = load_medios()
+    temas = load_temas(args.config_temas)
+    medios = load_medios(args.config_medios)
     if args.medios:
         medios = [m for m in medios if m.id in args.medios]
     if not medios:
@@ -55,7 +61,7 @@ def main(argv: list[str] | None = None) -> None:
             logger.warning("[%s] Aviso de gobernanza de datos: %s", m.id, m.aviso_legal)
 
     wb = openpyxl.load_workbook(GRID_XLSX, data_only=False)
-    tracker = GridState.desde_workbook(wb)
+    tracker = GridState.desde_workbook(wb, hoja_grid=args.hoja_grid, hoja_corpus=args.hoja_corpus)
     logger.info("Estado inicial del grid (medios seleccionados):\n%s", tracker.resumen_texto())
 
     if args.discover_only:
@@ -107,7 +113,7 @@ def main(argv: list[str] | None = None) -> None:
                     "alcance; solo se intenta el fallback manual.",
                     medio.id, genero,
                 )
-                filas = recolectar_manual(medio, genero, temas, segmentar, tracker)
+                filas = recolectar_manual(medio, genero, temas, segmentar, tracker, manual_urls_dir=args.manual_urls_dir)
                 todas_las_filas.extend(filas)
                 continue
 
@@ -132,7 +138,7 @@ def main(argv: list[str] | None = None) -> None:
                 todas_las_filas.extend(filas)
             else:
                 logger.warning("[%s/%s] sin feed válido, intentando fallback manual", medio.id, genero)
-                filas = recolectar_manual(medio, genero, temas, segmentar, tracker)
+                filas = recolectar_manual(medio, genero, temas, segmentar, tracker, manual_urls_dir=args.manual_urls_dir)
                 todas_las_filas.extend(filas)
 
         if not args.manual_only:
@@ -169,8 +175,8 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     if todas_las_filas:
-        escritas = escribir_filas(wb, todas_las_filas)
-        tracker.recomputar_columnas_fg(wb)
+        escritas = escribir_filas(wb, todas_las_filas, hoja_corpus=args.hoja_corpus)
+        tracker.recomputar_columnas_fg(wb, hoja_grid=args.hoja_grid)
         guardar_workbook_seguro(wb, GRID_XLSX)
         logger.info("Escritas %d fila(s) nueva(s) en '%s'.", escritas, GRID_XLSX)
     else:

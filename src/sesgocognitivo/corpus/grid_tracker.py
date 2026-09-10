@@ -63,8 +63,11 @@ class GridState:
     _siguiente_numero: int = 1
 
     @classmethod
-    def desde_workbook(cls, wb) -> "GridState":
-        ws_grid = wb[HOJA_GRID]
+    def desde_workbook(cls, wb, hoja_grid: str = HOJA_GRID, hoja_corpus: str = HOJA_CORPUS) -> "GridState":
+        """`hoja_grid`/`hoja_corpus` permiten operar sobre un par de hojas paralelo (ej.
+        'Grid de recoleccion v2' + 'Corpus - oraciones v2' para un corpus de otros dominios)
+        sin mezclar objetivos/avance con el corpus principal."""
+        ws_grid = wb[hoja_grid]
         objetivos: dict[tuple[str, str], ObjetivoCelda] = {}
         for fila in range(GRID_FILA_INICIO, GRID_FILA_FIN + 1):
             medio = ws_grid.cell(row=fila, column=1).value
@@ -79,7 +82,7 @@ class GridState:
 
         col_url = column_index_from_string(COLUMNA_URL)
         max_numero_visto = 0
-        ws_corpus = wb[HOJA_CORPUS]
+        ws_corpus = wb[hoja_corpus]
         for fila in range(CORPUS_FILA_INICIO, CORPUS_FILA_FIN + 1):
             articulo_id = ws_corpus.cell(row=fila, column=1).value
             oracion_id = ws_corpus.cell(row=fila, column=2).value
@@ -95,6 +98,18 @@ class GridState:
             match = _PATRON_ART_ID.match(articulo_id or "")
             if match:
                 max_numero_visto = max(max_numero_visto, int(match.group(1)))
+
+        # El contador de ART_NNN debe ser único en TODO el archivo, no solo en hoja_corpus:
+        # si hoja_corpus es un corpus paralelo (ej. v2 de otros dominios), un artículo nuevo
+        # ahí no puede reutilizar un número ya asignado a un artículo DISTINTO en la hoja
+        # principal -- sería el mismo id apuntando a dos artículos distintos según la hoja.
+        if hoja_corpus != HOJA_CORPUS and HOJA_CORPUS in wb.sheetnames:
+            ws_principal = wb[HOJA_CORPUS]
+            for fila in range(CORPUS_FILA_INICIO, CORPUS_FILA_FIN + 1):
+                articulo_id = ws_principal.cell(row=fila, column=1).value
+                match = _PATRON_ART_ID.match(articulo_id or "")
+                if match:
+                    max_numero_visto = max(max_numero_visto, int(match.group(1)))
 
         estado._siguiente_numero = max_numero_visto + 1
         return estado
@@ -170,10 +185,10 @@ class GridState:
         lineas.append(f"TOTAL: {total_actual}/{total_objetivo}")
         return "\n".join(lineas)
 
-    def recomputar_columnas_fg(self, wb) -> None:
+    def recomputar_columnas_fg(self, wb, hoja_grid: str = HOJA_GRID) -> None:
         """Recalcula (no incrementa) F/G 'artículos recolectados' desde cero cada corrida,
         para que rerunear el pipeline sea idempotente y no duplique conteos."""
-        ws_grid = wb[HOJA_GRID]
+        ws_grid = wb[hoja_grid]
         for fila in range(GRID_FILA_INICIO, GRID_FILA_FIN + 1):
             medio = ws_grid.cell(row=fila, column=1).value
             tema = ws_grid.cell(row=fila, column=2).value
