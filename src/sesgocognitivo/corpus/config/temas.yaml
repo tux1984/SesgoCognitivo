@@ -1,5 +1,5 @@
 # Los 5 dominios del corpus. "Política" es un subset curado tomado del corpus original (Transición/EEUU/Reformas/Seguridad, sin Terremoto) -- su celda está
-# cerrada (ver 'Grid de recoleccion v2'), por eso sus keywords quedan vacías a propósito:
+# cerrada (ver 'Grid de recoleccion'), por eso sus keywords quedan vacías a propósito:
 # nunca debe ganar la clasificación de un artículo nuevo que se esté recolectando para
 # alguno de los otros 4 dominios.
 temas:
@@ -62,7 +62,7 @@ temas:
     # Ángulo: decisiones polémicas de Néstor Lorenzo en la Selección Colombia (prelista,
     # caso Sebastián Villa) y disputas de arbitraje/dirigencia (Dimayor). La Silla Vacía se
     # confirmó (investigación real) sin cobertura deportiva activa en 2025-2026; su cuota
-    # del grid se redistribuyó a los otros 4 medios (ver 'Grid de recoleccion v2').
+    # del grid se redistribuyó a los otros 4 medios (ver 'Grid de recoleccion').
     keywords:
       - "selección colombia"
       - "néstor lorenzo"
